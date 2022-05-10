@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anyview | 可调试的编程作业平台</title>
+</head>
+<body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+    function login(){
+        $.ajax({
+            //几个参数需要注意一下
+            type: "GET",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/tasks" ,//url
+            success: function (result) {
+                console.log(result);//打印服务端返回的数据(调试用)
+                for(let i =0; i < result.length;i++) //data.data指的是数组，数组里是8个对象，i为数组的索引
+                {
+                    let tr;
+                    tr='<td>'+result[i].taskId+'</td>'+'<td>'+result[i].subjectName+'</td>'+'<td>'+result[i].problemNumber+'</td>'+'<td>'+result[i].totalScore+'</td>'+'<td>'+result[i].endTime+'</td>'
+                    $("#tabletest").append('<tr>'+tr+'</tr>')
+                }
+
+            },
+            error : function() {
+                alert("异常！");
+            }
+        });
+
+    }
+</script>
+<table class="table table-bordered" id='tabletest'>
+    <tr>
+        <th>序号</th>
+        <th>作业名称</th>
+        <th>题数</th>
+        <th>总分</th>
+        <th>截止时间</th>
+    </tr>
+</table>
+<p><input type="button" value="登录" onClick="login()">
+</body>
+</html>

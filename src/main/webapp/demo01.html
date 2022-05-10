@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测速</title>
+</head>
+<body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+    function login(){
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/text/1" ,//url
+            data: "",
+            success: function (result) {
+                console.log(result);//打印服务端返回的数据(调试用)
+                $("#div5").html(result);
+                if (result.resultCode == 200) {
+                    alert("SUCCESS");
+                }
+                ;
+            },
+            error : function() {
+                alert("异常！");
+            }
+        });
+
+    }
+
+    function f() {
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/text/user/5" ,//url
+            data: "",
+            success: function (result) {
+                let s=JSON.stringify(result);
+                console.log(result);//打印服务端返回的数据(调试用)
+                $("#div24").html(s);
+                if (result.resultCode == 200) {
+                    alert("SUCCESS");
+                }
+                ;
+            },
+            error : function() {
+                alert("异常！");
+            }
+        });
+    }
+
+</script>
+<div id="div24">24</div>
+<div id="div5">5</div>
+<p><input type="button" value="登录" onClick="login()">&nbsp;<input type="reset" value="重置" onClick="f()"></p>
+</body>
+</html>
