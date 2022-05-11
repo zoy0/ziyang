@@ -1,8 +1,8 @@
 package com.liziyang.www.pojo;
 
 public class StudentTask {
-    private Student student;
-    private Tasks tasks;
+    private int studentId;
+    private int tasksId;
     private State state=State.UNFINISH;
     private String answer;
 
@@ -27,20 +27,21 @@ public class StudentTask {
         }
     }
 
-    public Student getStudent() {
-        return student;
+
+    public int getStudentId() {
+        return studentId;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
-    public Tasks getTasks() {
-        return tasks;
+    public int getTasksId() {
+        return tasksId;
     }
 
-    public void setTasks(Tasks tasks) {
-        this.tasks = tasks;
+    public void setTasksId(int tasksId) {
+        this.tasksId = tasksId;
     }
 
     public State getState() {

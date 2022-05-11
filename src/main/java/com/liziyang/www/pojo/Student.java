@@ -1,7 +1,14 @@
 package com.liziyang.www.pojo;
 
+import com.liziyang.www.annotation.TableField;
+import com.liziyang.www.annotation.TableName;
+
+@TableName("student")
 public class Student {
+    @TableField("id")
     private int id;
+
+    @TableField("name")
     private String name;
 
     public Student() {
@@ -26,5 +33,13 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -24,13 +24,9 @@ public class JDBCUtils {
         }
     }
 
-    public static Connection getConnection(){
-        try {
+    public static Connection getConnection() throws SQLException {
             return ds.getConnection();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
+
     }
 
     public static void close(ResultSet resultSet, Statement statement, Connection connection){
