@@ -66,15 +66,26 @@ public class JDBCTemplateUtils<T> {
                     TableField tableField=f.getAnnotation(TableField.class);
                     String value = tableField.value();
                     char[] chars = f.getName().toCharArray();
-                    if (chars[0]>'a'&&chars[0]<'z') {
+                    if (chars[0]>='a'&&chars[0]<='z') {
                         chars[0]-=32;
                     }
                     String name= new String(chars);
-                    try {
-                        Method method=c.getMethod("set"+name,f.getType());
-                        method.invoke(t,rs.getObject(value));
-                    } catch (NoSuchMethodException | InvocationTargetException e) {
-                        e.printStackTrace();
+                    if (f.getType().isEnum()){
+                        try {
+                            Method m=f.getType().getMethod("values");
+                            Object[] enumValues =(Object[]) m.invoke(t);
+                            Method method = c.getMethod("set" + name, f.getType());
+                            method.invoke(t,enumValues[rs.getInt(value)]);
+                        } catch (InvocationTargetException | NoSuchMethodException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            Method method = c.getMethod("set" + name, f.getType());
+                            method.invoke(t, rs.getObject(value));
+                        } catch (NoSuchMethodException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -83,6 +94,8 @@ public class JDBCTemplateUtils<T> {
         return list;
 
     }
+
+
 
 
 }
