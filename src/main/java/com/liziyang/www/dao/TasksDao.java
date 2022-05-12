@@ -1,34 +1,44 @@
 package com.liziyang.www.dao;
 
+import com.liziyang.www.pojo.Student;
 import com.liziyang.www.pojo.Tasks;
-import com.liziyang.www.utils.JDBCUtils;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
-public class TasksDao {
+/**
+ * @author 扬
+ */
+public interface TasksDao {
 
-    public List<Tasks> select(){
-        List list=new ArrayList<Tasks>();
-        try {
-            Connection conn= JDBCUtils.getConnection();
-            String sql="select * from tasks";
-            Statement stm=conn.createStatement();
-            ResultSet resultSet = stm.executeQuery(sql);
-            while(resultSet.next()){
-                Tasks task=new Tasks(resultSet.getInt(1),resultSet.getString(2),
-                        resultSet.getInt(3),resultSet.getInt(4),
-                        resultSet.getTimestamp(5));
-                list.add(task);
-            }
-            JDBCUtils.close(resultSet,stm,conn);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return list;
-    }
+    /**
+     * 插入数据
+     * @param tasks
+     * @return
+     */
+    int insert(Tasks tasks);
+
+    /**
+     * 删除数据
+     * @param tid
+     * @return
+     */
+    int delete(int tid);
+
+    /**
+     * 查找数据
+     * @param tid
+     * @return
+     */
+    List<Tasks> select(Integer tid);
+
+    /**
+     * 修改数据
+     * @param tid
+     * @param map
+     * @return
+     */
+    int update(int tid, Map<Field,Object> map);
+
 }
