@@ -5,21 +5,29 @@ import com.liziyang.www.annotation.TableName;
 
 @TableName("student_task")
 public class StudentTask {
+
+    @TableField("student_task_id")
+    private int studentTaskId;
+
     @TableField("student_id")
     private int studentId;
+
     @TableField("task_id")
     private int tasksId;
+
+    @TableField("finish_number")
+    private int finishNumber;
+
     @TableField("state")
     private State state=State.UNFINISH;
-    @TableField("answer")
-    private String answer;
+
 
     public enum State{
         /**
          *
          */
-        ISFINISH(1,"已完成"),
-        UNFINISH(2,"未提交");
+        ISFINISH(0,"已完成"),
+        UNFINISH(1,"未提交");
 
         private final int code;
         private final String mean;
@@ -43,6 +51,16 @@ public class StudentTask {
         }
     }
 
+    public StudentTask() {
+    }
+
+    public StudentTask(int studentTaskId, int studentId, int tasksId, int finishNumber, State state) {
+        this.studentTaskId = studentTaskId;
+        this.studentId = studentId;
+        this.tasksId = tasksId;
+        this.finishNumber = finishNumber;
+        this.state = state;
+    }
 
     public int getStudentId() {
         return studentId;
@@ -68,21 +86,30 @@ public class StudentTask {
         this.state = state;
     }
 
-    public String getAnswer() {
-        return answer;
+    public int getStudentTaskId() {
+        return studentTaskId;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setStudentTaskId(int studentTaskId) {
+        this.studentTaskId = studentTaskId;
+    }
+
+    public int getFinishNumber() {
+        return finishNumber;
+    }
+
+    public void setFinishNumber(int finishNumber) {
+        this.finishNumber = finishNumber;
     }
 
     @Override
     public String toString() {
         return "StudentTask{" +
-                "studentId=" + studentId +
+                "studentTaskId=" + studentTaskId +
+                ", studentId=" + studentId +
                 ", tasksId=" + tasksId +
+                ", finishNumber=" + finishNumber +
                 ", state=" + state +
-                ", answer='" + answer + '\'' +
                 '}';
     }
 }

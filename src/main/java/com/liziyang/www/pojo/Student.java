@@ -11,12 +11,16 @@ public class Student {
     @TableField("name")
     private String name;
 
+    @TableField("class_name")
+    private String className;
+
     public Student() {
     }
 
-    public Student(int id, String name) {
+    public Student(int id, String name, String className) {
         this.id = id;
         this.name = name;
+        this.className = className;
     }
 
     public int getId() {
@@ -35,11 +39,20 @@ public class Student {
         this.name = name;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", className='" + className + '\'' +
                 '}';
     }
 }

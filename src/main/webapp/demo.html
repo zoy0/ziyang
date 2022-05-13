@@ -2,42 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Anyview | 可调试的编程作业平台</title>
+    <title>demo</title>
 </head>
 <body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script type="text/javascript">
-    function login(){
         $.ajax({
             //几个参数需要注意一下
             type: "GET",//方法类型
             dataType: "json",//预期服务器返回的数据类型
-            url: "/tasks" ,//url
+            url: "/StudentTasks" ,//url
             success: function (result) {
                 console.log(result);//打印服务端返回的数据(调试用)
                 for(let i =0; i < result.length;i++) //data.data指的是数组，数组里是8个对象，i为数组的索引
                 {
                     let tr;
-                    tr='<td>'+result[i].taskId+'</td>'+'<td>'+result[i].subjectName+'</td>'+'<td>'+result[i].problemNumber+'</td>'+'<td>'+result[i].totalScore+'</td>'+'<td>'+result[i].endTime+'</td>'
-                    $("#tabletest").append('<tr>'+tr+'</tr>')
+                    tr='<td>'+result[i].studentId+'</td>'+'<td>'+result[i].tasksId+'</td>'+'<td>'+result[i].state+'</td>'+'<td>'+result[i].answer+'</td>';
+                    $("#classTable").append('<tr>'+tr+'</tr>')
                 }
-
             },
             error : function() {
                 alert("异常！");
             }
         });
 
-    }
+
 </script>
 <table id="classTable">
     <tr>
-        <th>课程名</th>
-        <th>作业表</th>
-        <th>章节</th>
-        <th>题目数</th>
+        <th>学生id</th>
+        <th>作业id</th>
+        <th>状态</th>
+        <th>答案</th>
     </tr>
 </table>
-
 </body>
 </html>

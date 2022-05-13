@@ -23,19 +23,16 @@ public class Tasks {
     @TableField("endtime")
     private Timestamp endTime;
 
-    @TableField("right_answer")
-    private String rightAnswer;
 
     public Tasks() {
     }
 
-    public Tasks(int taskId, String subjectName, int problemNumber, int totalScore, Timestamp endTime, String rightAnswer) {
+    public Tasks(int taskId, String subjectName, int problemNumber, int totalScore, Timestamp endTime) {
         this.taskId = taskId;
         this.subjectName = subjectName;
         this.problemNumber = problemNumber;
         this.totalScore = totalScore;
         this.endTime = endTime;
-        this.rightAnswer = rightAnswer;
     }
 
     public int getTaskId() {
@@ -78,13 +75,6 @@ public class Tasks {
         this.endTime = endTime;
     }
 
-    public String getRightAnswer() {
-        return rightAnswer;
-    }
-
-    public void setRightAnswer(String rightAnswer) {
-        this.rightAnswer = rightAnswer;
-    }
 
     @Override
     public String toString() {
@@ -94,7 +84,6 @@ public class Tasks {
                 ", problemNumber=" + problemNumber +
                 ", totalScore=" + totalScore +
                 ", endTime=" + endTime +
-                ", rightAnswer='" + rightAnswer + '\'' +
                 '}';
     }
 }
