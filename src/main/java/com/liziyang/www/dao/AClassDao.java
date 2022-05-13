@@ -27,7 +27,7 @@ public interface AClassDao {
      * @param cid
      * @return
      */
-    List<AClass> select(Integer cid);
+    List<AClass> select(Map<String, Object> map);
 
     /**
      * 修改数据

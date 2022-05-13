@@ -32,4 +32,11 @@ public class JDBCTemplateUtilsTest extends TestCase {
         //System.out.println(list1);
         System.out.println(list2);
     }
+
+
+    public void testGetTableName() {
+        JDBCTemplateUtils<Student> utils=new JDBCTemplateUtils<>();
+
+        System.out.println(utils.getTableName(Student.class));
+    }
 }

@@ -14,7 +14,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public int insert(Student student) {
-        sql="insert into "+jdbc.getTableName()+" values(?,?)";
+        sql="insert into "+jdbc.getTableName(Student.class)+" values(?,?)";
         Object[] objects={student.getId(),student.getName()};
         return jdbc.update(sql,objects);
     }

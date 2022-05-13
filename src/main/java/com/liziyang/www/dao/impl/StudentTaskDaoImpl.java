@@ -18,31 +18,14 @@ public class StudentTaskDaoImpl implements StudentTaskDao {
 
     @Override
     public int insert(StudentTask studentTask) {
-        sql=new StringBuffer("insert into student_task values(?,?,?,?)");
-        Object[] objects={studentTask.getStudentId(),studentTask.getTasksId(),studentTask.getState(),studentTask.getAnswer()};
+        sql=new StringBuffer("insert into student_task values(?,?,?,?,?)");
+        Object[] objects={null,studentTask.getStudentId(),studentTask.getTasksId(),studentTask.getFinishNumber(), studentTask.getState().ordinal()};
         return jdbc.update(sql.toString(),objects);
     }
 
     @Override
     public List<StudentTask> select(Map<String, Object> map) {
-        sql = new StringBuffer("select * from student_task ");
-        if (map==null) {
-            return jdbc.query(sql.toString(),null, StudentTask.class);
-        }else {
-            sql.append("where ");
-            Set<String> set = map.keySet();
-            int i=0;
-            ArrayList<Object> arrayList=new ArrayList<>();
-            for (String s:
-                 set) {
-                sql.append(s).append(" = ? ");
-                if (++i!=set.size()) {
-                    sql.append( "and ");
-                }
-                arrayList.add(map.get(s));
-            }
-            return jdbc.query(sql.toString(),arrayList.toArray(),StudentTask.class);
-        }
+        return jdbc.commonSelect(map,StudentTask.class);
     }
 
     @Override

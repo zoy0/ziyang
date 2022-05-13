@@ -2,6 +2,7 @@ package com.liziyang.www.utils;
 
 import com.liziyang.www.annotation.TableField;
 import com.liziyang.www.annotation.TableName;
+import com.liziyang.www.pojo.AClass;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -11,9 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class JDBCTemplateUtils<T> {
     private Connection conn = null;
@@ -105,8 +104,29 @@ public class JDBCTemplateUtils<T> {
 
     }
 
-    public String getTableName() {
-        return aClass.getAnnotation(TableName.class).value();
+    public  String getTableName(Class<T> clazz) {
+        return clazz.getAnnotation(TableName.class).value();
+    }
+
+    public List<T> commonSelect( Map<String,Object> map,Class<T> clazz){
+        StringBuffer sql = new StringBuffer("select * from  "+getTableName(clazz));
+        if (map==null) {
+            return query(sql.toString(),null, clazz);
+        }else {
+            sql.append("where ");
+            Set<String> set = map.keySet();
+            int i=0;
+            ArrayList<Object> arrayList=new ArrayList<>();
+            for (String s:
+                    set) {
+                sql.append(s).append(" = ? ");
+                if (++i!=set.size()) {
+                    sql.append( "and ");
+                }
+                arrayList.add(map.get(s));
+            }
+            return query(sql.toString(),arrayList.toArray(),clazz);
+        }
     }
 
 

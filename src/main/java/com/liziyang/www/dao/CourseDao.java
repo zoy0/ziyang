@@ -26,7 +26,7 @@ public interface CourseDao {
      * @param cid
      * @return
      */
-    List<Course> select(Integer cid);
+    List<Course> select(Map<String, Object> map);
 
     /**
      * 修改数据

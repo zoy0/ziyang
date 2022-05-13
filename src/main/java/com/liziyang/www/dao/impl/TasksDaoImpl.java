@@ -25,7 +25,7 @@ public class TasksDaoImpl implements TasksDao {
     @Override
     public int insert(Tasks tasks) {
         sql = "insert into tasks values(?,?,?,?,?)";
-        Object[] objects = {tasks.getTaskId(), tasks.getSubjectName(), tasks.getProblemNumber(), tasks.getTotalScore(),
+        Object[] objects = {null, tasks.getSubjectName(), tasks.getProblemNumber(), tasks.getTotalScore(),
                             tasks.getEndTime()};
         return jdbc.update(sql,objects);
     }
