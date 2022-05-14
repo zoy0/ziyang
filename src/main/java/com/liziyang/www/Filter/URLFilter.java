@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+
+/**
+ * 识别URI的过滤器，实现uri的重定向和传递参数（rest风格）
+ */
 @WebFilter("/*")
 public class URLFilter implements Filter {
     static final String FUZZY_MAP = "fuzzyServletMap";
