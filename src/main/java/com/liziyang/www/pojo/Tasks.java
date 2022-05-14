@@ -11,6 +11,9 @@ public class Tasks {
     @TableField("taskid")
     private int taskId;
 
+    @TableField("course_id")
+    private int courseId;
+
     @TableField("subjectname")
     private String subjectName;
 
@@ -27,8 +30,9 @@ public class Tasks {
     public Tasks() {
     }
 
-    public Tasks(int taskId, String subjectName, int problemNumber, int totalScore, Timestamp endTime) {
+    public Tasks(int taskId, int courseId, String subjectName, int problemNumber, int totalScore, Timestamp endTime) {
         this.taskId = taskId;
+        this.courseId = courseId;
         this.subjectName = subjectName;
         this.problemNumber = problemNumber;
         this.totalScore = totalScore;
@@ -75,11 +79,19 @@ public class Tasks {
         this.endTime = endTime;
     }
 
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
     @Override
     public String toString() {
         return "Tasks{" +
                 "taskId=" + taskId +
+                ", courseId=" + courseId +
                 ", subjectName='" + subjectName + '\'' +
                 ", problemNumber=" + problemNumber +
                 ", totalScore=" + totalScore +

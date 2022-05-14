@@ -48,11 +48,11 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public String getaProfiles() {
+    public String getAProfiles() {
         return aProfiles;
     }
 
-    public void setaProfiles(String aProfiles) {
+    public void setAProfiles(String aProfiles) {
         this.aProfiles = aProfiles;
     }
 

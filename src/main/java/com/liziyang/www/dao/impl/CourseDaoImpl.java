@@ -15,7 +15,7 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public int insert(Course course) {
         sql=new StringBuffer("insert into "+jdbc.getTableName(Course.class)+" values(?,?,?,?,?)");
-        Object[] objects={null ,course.getCourseName(),course.getaProfiles(),course.getCountSubject(),course.getCountQuestion()};
+        Object[] objects={null ,course.getCourseName(),course.getAProfiles(),course.getCountSubject(),course.getCountQuestion()};
         return jdbc.update(sql.toString(),objects);
     }
 

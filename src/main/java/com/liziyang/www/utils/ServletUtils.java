@@ -16,4 +16,14 @@ public class ServletUtils {
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write(s);
     }
+
+    public static String getParameter(String uri,int i) {
+        String[] vals = uri.split("/");
+        if (i< vals.length+1){
+            return vals[i];
+        }else {
+            return null;
+        }
+
+    }
 }
