@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 import java.util.List;
 
 @FuzzyValues({2,4})
-@WebServlet("/course/{courseId}/studentTasks/{taskId}")
+@WebServlet("/student/{studentId}/course/{courseId}/studentTasks/{taskId}")
 public class StudentTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

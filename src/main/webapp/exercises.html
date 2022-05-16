@@ -11,7 +11,7 @@
             //几个参数需要注意一下
             type: "GET",//方法类型
             dataType: "json",//预期服务器返回的数据类型
-            url: "/course" ,//url
+            url: "/student/12/course" ,//url
             success: function (result) {
                 console.log(result);//打印服务端返回的数据(调试用)
                 for(let i =0; i < result.length;i++) //data.data指的是数组，数组里是8个对象，i为数组的索引

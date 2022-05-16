@@ -104,7 +104,7 @@ public class JDBCTemplateUtils<T> {
 
     }
 
-    public  String getTableName(Class<T> clazz) {
+    public  String getTableName(Class<?> clazz) {
         return clazz.getAnnotation(TableName.class).value();
     }
 
