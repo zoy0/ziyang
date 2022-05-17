@@ -12,10 +12,10 @@ public class StuTasksDaoImpl implements StuTasksDao {
      private final JDBCTemplateUtils<StuTasks> utils=new JDBCTemplateUtils<>();
      StringBuffer sql;
 
-    @Override
+     @Override
     public List<StuTasks> findOnesTasks(int studentId, int courseId) {
         sql=new StringBuffer("select * from "+utils.getTableName(Tasks.class)+","+utils.getTableName(StudentTask.class)
-                            +" where course_id = ? and student_id = ? and taskid = task_id");
+                +" where course_id = ? and student_id = ? and taskid = task_id");
         Object[] objects={courseId,studentId};
         return  utils.query(sql.toString(), objects, StuTasks.class);
     }
