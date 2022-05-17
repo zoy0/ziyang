@@ -17,15 +17,13 @@ import java.io.IOException;
 import java.lang.annotation.Target;
 import java.util.List;
 
-@FuzzyValues({2,4})
+@FuzzyValues({2,4,6})
 @WebServlet("/student/{studentId}/course/{courseId}/studentTasks/{taskId}")
 public class StudentTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println(req.getAttribute("{courseId}")+" and "+req.getAttribute("{taskId}"));
-        String id=ServletUtils.getParameter(req.getRequestURI(),2);
-        StudentTaskServiceImpl service=new StudentTaskServiceImpl();
-        service.showUserTasks(resp,id);
+        StudentTaskServiceImpl service = new StudentTaskServiceImpl();
+        service.showUserTasks(req,resp);
     }
 
     @Override

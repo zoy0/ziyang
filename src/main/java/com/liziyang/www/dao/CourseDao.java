@@ -23,7 +23,7 @@ public interface CourseDao {
 
     /**
      * 查找数据
-     * @param cid
+     * @param map
      * @return
      */
     List<Course> select(Map<String, Object> map);
@@ -35,4 +35,6 @@ public interface CourseDao {
      * @return
      */
     int update(int cid, Map<String,Object> map);
+
+    List <Course> searchByClassName(String className);
 }

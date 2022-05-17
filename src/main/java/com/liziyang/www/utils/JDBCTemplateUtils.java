@@ -113,7 +113,7 @@ public class JDBCTemplateUtils<T> {
         if (map==null) {
             return query(sql.toString(),null, clazz);
         }else {
-            sql.append("where ");
+            sql.append(" where ");
             Set<String> set = map.keySet();
             int i=0;
             ArrayList<Object> arrayList=new ArrayList<>();

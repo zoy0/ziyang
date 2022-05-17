@@ -3,6 +3,8 @@ package com.liziyang.www.dao.impl;
 import com.liziyang.www.dao.CourseDao;
 import com.liziyang.www.pojo.AClass;
 import com.liziyang.www.pojo.Course;
+import com.liziyang.www.pojo.StudentTask;
+import com.liziyang.www.pojo.Tasks;
 import com.liziyang.www.utils.JDBCTemplateUtils;
 
 import java.util.List;
@@ -32,5 +34,13 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public int update(int cid, Map<String, Object> map) {
         return 0;
+    }
+
+    @Override
+    public List<Course> searchByClassName(String className) {
+        sql=new StringBuffer("select * from "+jdbc.getTableName(AClass.class)+","+jdbc.getTableName(Course.class)
+                +" where class_name = ? and course_id = id");
+        Object[] obj={className};
+        return jdbc.query(sql.toString(),obj,Course.class);
     }
 }

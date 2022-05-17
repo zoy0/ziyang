@@ -12,6 +12,9 @@ public class Question {
     @TableField("task_id")
     private int taskId;
 
+    @TableField("question_content")
+    private String questionContent;
+
     @TableField("full_score")
     private int fullScore;
 
@@ -48,9 +51,10 @@ public class Question {
     public Question() {
     }
 
-    public Question(int questionId, int taskId, int fullScore, Question.questionType questionType, String rightAnswer) {
+    public Question(int questionId, int taskId, String questionContent, int fullScore, Question.questionType questionType, String rightAnswer) {
         this.questionId = questionId;
         this.taskId = taskId;
+        this.questionContent = questionContent;
         this.fullScore = fullScore;
         this.questionType = questionType;
         this.rightAnswer = rightAnswer;
@@ -96,11 +100,20 @@ public class Question {
         this.rightAnswer = rightAnswer;
     }
 
+    public String getQuestionContent() {
+        return questionContent;
+    }
+
+    public void setQuestionContent(String questionContent) {
+        this.questionContent = questionContent;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
                 "questionId=" + questionId +
                 ", taskId=" + taskId +
+                ", questionContent='" + questionContent + '\'' +
                 ", fullScore=" + fullScore +
                 ", questionType=" + questionType +
                 ", rightAnswer='" + rightAnswer + '\'' +

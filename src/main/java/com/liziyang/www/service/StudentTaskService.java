@@ -1,8 +1,10 @@
 package com.liziyang.www.service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface StudentTaskService {
 
-    void showUserTasks(HttpServletResponse resp,String id);
+
+    void showUserTasks(HttpServletRequest req, HttpServletResponse resp);
 }

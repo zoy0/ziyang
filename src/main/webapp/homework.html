@@ -12,18 +12,22 @@
         //几个参数需要注意一下
         type: "GET",//方法类型
         dataType: "json",//预期服务器返回的数据类型
-        url: "/course/"+getQueryVariable("id")+"/studentTasks" ,//url
+        url: "/student/12/course/"+getQueryVariable("id")+"/studentTasks" ,//url
         success: function (result) {
             console.log(result);//打印服务端返回的数据(调试用)
-            console.log(getQueryVariable("id"));
             for(let i =0; i < result.length;i++) //data.data指的是数组，数组里是8个对象，i为数组的索引
             {
                 let tr;
-                tr='<td>'+result[i].courseName+'</td>' +
-                    '<td>'+result[i].aprofiles+'</td>'+
-                    '<td>'+result[i].countSubject+'</td>'+
-                    '<td>'+result[i].countQuestion+'</td>'+
-                    '<td>'+url+'</td>'
+                let operation;
+                if (new Date().getTime()>result[i].endTime) operation='<td><a href="#">查看</a></td>';
+                else operation=operation='<td><a href="#">修改</a></td>';
+                tr='<td>'+(i+1)+'</td>' +
+                    '<td>'+result[i].subjectName+'</td>'+
+                    '<td>'+result[i].problemNumber+'</td>'+
+                    '<td>'+result[i].totalScore+'</td>'+
+                    '<td>'+timestampToTime(result[i].endTime)+'</td>'+
+                    '<td>'+result[i].finishNumber+'</td>'+
+                    '<td>'+result[i].state+'</td>'+operation
                 $("#classTable").append('<tr>'+tr+'</tr>')
             }
         },

@@ -5,6 +5,7 @@ import com.liziyang.www.pojo.Student;
 import com.liziyang.www.utils.JDBCTemplateUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,9 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> select(int sid) {
-        return null;
+        Map<String,Object> map=new HashMap<>();
+        map.put("id",sid);
+        return jdbc.commonSelect(map,Student.class);
     }
 
     @Override
