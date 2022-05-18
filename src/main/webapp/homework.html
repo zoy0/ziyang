@@ -20,7 +20,7 @@
                 let tr;
                 let operation;
                 if (new Date().getTime()>result[i].endTime) operation='<td><a href="#">查看</a></td>';
-                else operation=operation='<td><a href="#">修改</a></td>';
+                else operation=operation='<td><a href="dohomework.html?stId='+result[i].studentTaskId+'">修改</a></td>';
                 tr='<td>'+(i+1)+'</td>' +
                     '<td>'+result[i].subjectName+'</td>'+
                     '<td>'+result[i].problemNumber+'</td>'+

@@ -11,6 +11,9 @@ public class StuTasks {
     @TableField("course_id")
     private int courseId;
 
+    @TableField("student_task_id")
+    private int studentTaskId;
+
     @TableField("subjectname")
     private String subjectName;
 
@@ -32,9 +35,10 @@ public class StuTasks {
     public StuTasks() {
     }
 
-    public StuTasks(int taskId, int courseId, String subjectName, int problemNumber, int totalScore, Timestamp endTime, StudentTask.State state, int finishNumber) {
+    public StuTasks(int taskId, int courseId, int studentTaskId, String subjectName, int problemNumber, int totalScore, Timestamp endTime, StudentTask.State state, int finishNumber) {
         this.taskId = taskId;
         this.courseId = courseId;
+        this.studentTaskId = studentTaskId;
         this.subjectName = subjectName;
         this.problemNumber = problemNumber;
         this.totalScore = totalScore;
@@ -105,5 +109,13 @@ public class StuTasks {
 
     public void setFinishNumber(int finishNumber) {
         this.finishNumber = finishNumber;
+    }
+
+    public int getStudentTaskId() {
+        return studentTaskId;
+    }
+
+    public void setStudentTaskId(int studentTaskId) {
+        this.studentTaskId = studentTaskId;
     }
 }

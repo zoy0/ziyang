@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@FuzzyValues({2,4,6})
+@FuzzyValues({2,4})
 @WebServlet("/studentTasks/{studentTaskId}/question/{questionId}")
 public class StudentQuestionServlet extends HttpServlet {
     @Override

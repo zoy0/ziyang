@@ -1,5 +1,7 @@
 package com.liziyang.www.pojo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liziyang.www.annotation.TableField;
 
 public class StuQuestion {
@@ -32,20 +34,9 @@ public class StuQuestion {
     @TableField("score")
     private int score;
 
-    public StuQuestion() {
-    }
 
-    public StuQuestion(int questionId, int taskId, String questionContent, int fullScore, Question.questionType questionType, String rightAnswer, int studentTaskId, String studentAnswer, int score) {
-        this.questionId = questionId;
-        this.taskId = taskId;
-        this.questionContent = questionContent;
-        this.fullScore = fullScore;
-        this.questionType = questionType;
-        this.rightAnswer = rightAnswer;
-        this.studentTaskId = studentTaskId;
-        this.studentAnswer = studentAnswer;
-        this.score = score;
-    }
+
+
 
     public int getQuestionId() {
         return questionId;
@@ -62,6 +53,7 @@ public class StuQuestion {
     public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
+
 
     public String getQuestionContent() {
         return questionContent;
