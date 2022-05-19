@@ -31,7 +31,7 @@
         </el-form-item>
 
         <el-form-item label="">
-            <el-input v-model="brand.fuzzyName" placeholder="请输入作业名称/课程名称/班级名称"></el-input>
+            <el-input v-model="fuzzyName" placeholder="请输入作业名称/课程名称/班级名称"></el-input>
         </el-form-item>
 
 
@@ -64,7 +64,7 @@
             </el-table-column>
 
             <el-table-column
-                    prop="taskName"
+                    prop="subjectName"
                     label="作业名称"
                     align="center"
             >
@@ -87,13 +87,13 @@
             </el-table-column>
 
             <el-table-column
-                    prop="startTime"
+                    prop="startTimeStr"
                     align="center"
                     label="发布时间">
             </el-table-column>
 
             <el-table-column
-                    prop="endTime"
+                    prop="endTimeStr"
                     align="center"
                     label="结束时间">
             </el-table-column>
@@ -164,18 +164,20 @@
             selectAll() {
 
                 axios({
-                    method: "post",
-                    url: "http://localhost:8080/brand-case/brand/selectByPageAndCondition?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
-                    data: this.brand
+                    method: "get",
+                    url: "/task/semester/"+this.semester+"/fuzzy/"+this.fuzzyName,
                 }).then(resp => {
                     //设置表格数据
-                    this.tableData = resp.data.rows; // {rows:[],totalCount:100}
+                    console.log(resp.data)
+                    this.tableData = resp.data; // {rows:[],totalCount:100}
                     //设置总记录数
-                    this.totalCount = resp.data.totalCount;
+                    //this.totalCount = resp.data.totalCount;
+                    //console.log(this.tableData)
                 })
 
 
             },
+
 
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
@@ -225,7 +227,6 @@
                     }
                 })
 
-
             },
 
             //分页
@@ -255,13 +256,17 @@
                 // 添加数据对话框是否展示的标记
                 dialogVisible: false,
 
+                fuzzyName:"",
+
+
                 brand: {
-                    taskName: '',
+                    semester:"",
+                    subjectName: '',
                     courseName: '',
                     problemNumber: '',
                     className: "",
-                    startTime: "",
-                    endTime: "",
+                    startTimeStr: "",
+                    endTimeStr: "",
                     finishNumber: "",
                     statusStr: ""
                 },
@@ -271,30 +276,33 @@
                 multipleSelection: [],
                 // 表格数据
                 tableData: [{
+                    semester:"",
                     taskName: '二轮考核',
                     courseName: '离散数学',
                     problemNumber: '1',
                     className: "测试班",
-                    startTime: "2022-3-05",
-                    endTime: "2022-4-09",
+                    startTimeStr: "2022-3-05",
+                    endTimeStr: "2022-4-09",
                     finishNumber: "5",
                     statusStr: "已结束"
                 }, {
+                    semester:"",
                     taskName: '第7章',
                     courseName: '离散数学',
                     problemNumber: '10',
                     className: "20计科5班",
-                    startTime: "2022-5-09",
-                    endTime: "2022-6-01",
+                    startTimeStr: "2022-5-09",
+                    endTimeStr: "2022-6-01",
                     finishNumber: "12",
                     statusStr: "进行中"
                 }, {
+                    semester:"",
                     taskName: '测试',
                     courseName: 'c程序设计',
                     problemNumber: '25',
                     className: "21计算机14班",
-                    startTime: "2022-3-05",
-                    endTime: "2022-6-01",
+                    startTimeStr: "2022-3-05",
+                    endTimeStr: "2022-6-01",
                     finishNumber: "35",
                     statusStr: "进行中"
                 }]

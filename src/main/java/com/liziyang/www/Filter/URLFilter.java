@@ -39,10 +39,11 @@ public class URLFilter implements Filter {
             servletRequest.getServletContext().setAttribute(FUZZY_MAP, servletFuzzyMap);
         }
         Map<String, int[]> servletFuzzyMap = (Map<String, int[]>) servletRequest.getServletContext().getAttribute(FUZZY_MAP);
-        String[] uriArray = uri.split("/");
+        //String[] uriArray = uri.split("/");
         Set<String> uriFuzzySet = servletFuzzyMap.keySet();
         for (String s :
                 uriFuzzySet) {
+            String[] uriArray = uri.split("/");
             String[] split = s.split("/");
             if (split.length == uriArray.length || split.length == uriArray.length + 1) {
                 int[] fuzzyOrder = servletFuzzyMap.get(s);

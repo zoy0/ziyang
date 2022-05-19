@@ -14,6 +14,9 @@ public class Tasks {
     @TableField("course_id")
     private int courseId;
 
+    @TableField("semester")
+    private String semester;
+
     @TableField("subjectname")
     private String subjectName;
 
@@ -23,21 +26,19 @@ public class Tasks {
     @TableField("totalscore")
     private int totalScore;
 
+    @TableField("starttime")
+    private Timestamp startTime;
+
     @TableField("endtime")
     private Timestamp endTime;
+
+    @TableField("finishnumber")
+    private int finishNumber;
 
 
     public Tasks() {
     }
 
-    public Tasks(int taskId, int courseId, String subjectName, int problemNumber, int totalScore, Timestamp endTime) {
-        this.taskId = taskId;
-        this.courseId = courseId;
-        this.subjectName = subjectName;
-        this.problemNumber = problemNumber;
-        this.totalScore = totalScore;
-        this.endTime = endTime;
-    }
 
     public int getTaskId() {
         return taskId;
@@ -85,6 +86,30 @@ public class Tasks {
 
     public void setCourseId(int courseId) {
         this.courseId = courseId;
+    }
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getFinishNumber() {
+        return finishNumber;
+    }
+
+    public void setFinishNumber(int finishNumber) {
+        this.finishNumber = finishNumber;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
     @Override

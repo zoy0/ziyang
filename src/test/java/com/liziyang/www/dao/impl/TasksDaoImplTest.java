@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 public class TasksDaoImplTest extends TestCase {
 
     public void testInsert() {
-        Tasks tasks = new Tasks(0,1,"Chinese",20,50,new Timestamp(System.currentTimeMillis()));
-        System.out.println(new TasksDaoImpl().insert(tasks));
     }
 
     public void testDelete() {
