@@ -1,6 +1,7 @@
 package com.liziyang.www.dao;
 
 import com.liziyang.www.pojo.Student;
+import com.liziyang.www.pojo.StudentQuestion;
 import com.liziyang.www.pojo.StudentTask;
 
 import java.lang.reflect.Field;
@@ -35,4 +36,5 @@ public interface StudentTaskDao {
      */
     int update(int id, Map<Field,Object> map);
 
+    int updateAnswer(StudentQuestion studentQuestion);
 }

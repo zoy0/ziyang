@@ -2,6 +2,7 @@ package com.liziyang.www.dao.impl;
 
 import com.liziyang.www.dao.StudentTaskDao;
 import com.liziyang.www.pojo.Student;
+import com.liziyang.www.pojo.StudentQuestion;
 import com.liziyang.www.pojo.StudentTask;
 import com.liziyang.www.pojo.Tasks;
 import com.liziyang.www.utils.JDBCTemplateUtils;
@@ -32,4 +33,13 @@ public class StudentTaskDaoImpl implements StudentTaskDao {
     public int update(int id, Map<Field, Object> map) {
         return 0;
     }
+
+    @Override
+    public int updateAnswer(StudentQuestion studentQuestion) {
+        sql=new StringBuffer("update "+jdbc.getTableName(StudentQuestion.class)+ " set student_answer=? where student_task_id=? and question_id=?");
+        Object[] objects={studentQuestion.getStudentAnswer(),studentQuestion.getStudentTaskId(),studentQuestion.getQuestionId()};
+        return jdbc.update(sql.toString(),objects);
+    }
+
+
 }

@@ -5,4 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface StudentQuestionService {
     void showQuestions(HttpServletRequest req, HttpServletResponse resp);
+
+    void submitAnswer(HttpServletRequest req, HttpServletResponse resp);
 }

@@ -6,13 +6,14 @@
 </head>
 <body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
 <script src="js/my.js"></script>
 <script type="text/javascript">
     $.ajax({
         //几个参数需要注意一下
         type: "GET",//方法类型
         dataType: "json",//预期服务器返回的数据类型
-        url: "/student/12/course/"+getQueryVariable("id")+"/studentTasks" ,//url
+        url: "/student/"+$.cookie("studentId")+"/course/"+getQueryVariable("id")+"/studentTasks" ,//url
         success: function (result) {
             console.log(result);//打印服务端返回的数据(调试用)
             for(let i =0; i < result.length;i++) //data.data指的是数组，数组里是8个对象，i为数组的索引
