@@ -5,6 +5,8 @@ import com.liziyang.www.annotation.TableField;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskDetail {
     @TableField("taskid")
@@ -41,6 +43,7 @@ public class TaskDetail {
     @TableField("finishnumber")
     private int finishNumber;
 
+    private String statusStr;
 
     public int getTaskId() {
         return taskId;
@@ -142,4 +145,28 @@ public class TaskDetail {
         this.endTimeStr = endTimeStr;
     }
 
+    public String getStatusStr() {
+        return statusStr;
+    }
+
+    public  void setStatusStr() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        if (this.startTime.after(now)) {
+            this.statusStr="未开始";
+        } else if (this.endTime.after(now)) {
+            this.statusStr="进行中";
+        } else {
+            this.statusStr="已结束";
+        }
+    }
+
+    public  List<TaskDetail> setListStatusStr(List<TaskDetail> allTasks){
+        List<TaskDetail> list=new ArrayList<>();
+        for (TaskDetail td:
+                allTasks) {
+            td.setStatusStr();
+            list.add(td);
+        }
+        return list;
+    }
 }

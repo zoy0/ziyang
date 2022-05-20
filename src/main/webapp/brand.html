@@ -21,7 +21,7 @@
     <el-form :inline="true" :model="brand" class="demo-form-inline">
 
         <el-form-item label="学期">
-            <el-select v-model="brand.semester">
+            <el-select v-model="semester">
                 <el-option label="2022春" value="1"></el-option>
                 <el-option label="2021秋" value="2"></el-option>
                 <el-option label="2021春" value="3"></el-option>
@@ -31,7 +31,7 @@
         </el-form-item>
 
         <el-form-item label="">
-            <el-input v-model="fuzzyName" placeholder="请输入作业名称/课程名称/班级名称"></el-input>
+            <el-input v-model="fuzzyName"  placeholder="请输入作业名称/课程名称/班级名称"></el-input>
         </el-form-item>
 
 
@@ -168,6 +168,7 @@
                     url: "/task/semester/"+this.semester+"/fuzzy/"+this.fuzzyName,
                 }).then(resp => {
                     //设置表格数据
+                    console.log(this.fuzzyName)
                     console.log(resp.data)
                     this.tableData = resp.data; // {rows:[],totalCount:100}
                     //设置总记录数
@@ -257,6 +258,8 @@
                 dialogVisible: false,
 
                 fuzzyName:"",
+
+                semester:"",
 
 
                 brand: {

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface TaskDetailDao {
     List<TaskDetail> findAllTasks();
+
+    List<TaskDetail> findFuzzy(String semester, String fuzzy);
 }
