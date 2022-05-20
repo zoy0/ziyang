@@ -41,9 +41,144 @@
     </el-form>
 
     <el-row>
-        <el-button type="primary" plain>添加作业</el-button>
+        <el-button type="primary" plain @click="dialogVisible = true">添加作业</el-button>
         <el-button type="success" plain>导出成绩</el-button>
     </el-row>
+
+    <div id="taskForm">
+        <el-dialog
+                title="添加作业"
+                :visible.sync="dialogVisible"
+        >
+            <el-dialog
+                    width="30%"
+                    title="题库"
+                    :visible.sync="bankVisible"
+                    append-to-body>
+                <el-table
+                        ref="multipleTable"
+                        :data="problem"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange2">
+                    <el-table-column
+                            type="selection"
+                            width="55">
+                    </el-table-column>
+                    <el-table-column
+                            type="index"
+                            label="序号"
+                            width="120">
+                        <!--                    <template slot-scope="scope">{{ scope.row.date }}</template>-->
+                    </el-table-column>
+                    <el-table-column
+                            prop="main"
+                            label="题目"
+                            width="120">
+                    </el-table-column>
+                </el-table>
+
+                <el-row>
+                    <el-button type="primary" round @click="addToNewProblem">选择</el-button>
+                    <el-button type="danger" round @click="bankVisible = false">取消</el-button>
+                </el-row>
+                <br>
+
+
+            </el-dialog>
+
+
+
+            <el-form ref="form" :model="brand" label-width="80px">
+                <el-form-item label="作业名称:">
+                    <el-input v-model="taskForm.taskName"></el-input>
+                </el-form-item>
+
+                <div id="course">
+                    所属课程:
+                    <template>
+                        <el-select v-model="taskForm.courseName" filterable placeholder="请选择">
+                            <el-option
+                                    v-for="item in courseOptions"
+                                    :key="item.label"
+                                    :label="item.label"
+                                    :value="item.label">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </div>
+                <br>
+
+                <div>
+                    所属班级：
+                    <template>
+                        <el-select v-model="taskForm.className" filterable placeholder="请选择班级">
+                            <el-option
+                                    v-for="item in classOptions"
+                                    :key="item.label"
+                                    :label="item.label"
+                                    :value="item.label">
+                            </el-option>
+                        </el-select>
+                    </template>
+
+                </div>
+                <br>
+
+                <el-row>
+                    题目：
+                    <el-button type="success" plain>添加题目</el-button>
+                    <el-button type="danger"  plain @click="bankVisible = true">题库选题</el-button>
+                </el-row>
+                <br>
+                </el-form-item>
+
+                <el-table
+                        :data="addedProblem"
+                        border
+                        height="200"
+                        :summary-method="getSummaries"
+                        show-summary
+                        style="width: 100%; margin-top: 20px">
+                    <el-table-column
+                            type="index"
+                            label="序号"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="question_content"
+                            label="题目简介">
+                    </el-table-column>
+                    <el-table-column
+                            prop="question_type"
+                            label="题型">
+                    </el-table-column>
+                    <el-table-column
+                            prop="full_score"
+                            label="分值">
+                        <template slot-scope="scope">
+                            <input placeholder="请输入" v-model="addedProblem[scope.$index].full_score">
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDelete1(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-form-item>
+                    <el-button type="primary" @click="addBrand">提交</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+
+        </el-dialog>
+    </div>
 
 
     <!--表格-->
@@ -243,11 +378,142 @@
                 this.currentPage = val;
                 this.selectAll();
             },
+            getSummaries(param) {
+                const { columns, data } = param;
+                const sums = [];
+                columns.forEach((column, index) => {
+                    if (index === 2) {
+                        sums[index] = '总分';
+                        return;
+                    }
+                    const values = data.map(item => Number(item[column.property]));
+                    if (!values.every(value => isNaN(value))) {
+                        sums[index] = values.reduce((prev, curr) => {
+                            const value = Number(curr);
+                            if (!isNaN(value)) {
+                                return prev + curr;
+                            } else {
+                                return prev;
+                            }
+                        }, 0);
+                        sums[index] += ' 分';
+                    }
+                });
+
+                return sums;
+            },
+            handleSelectionChange2(val){
+                console.log('selectArr',val)
+                this.newP=val;
+            },
+            addToNewProblem(){
+                console.log(this.newP[0])
+                this.addedProblem=this.addedProblem.concat(this.newP)
+            },
+            handleDelete1(index, row) {
+                this.$delete(this.addedProblem,index)
+                console.log(index, row);
+            },
 
 
         },
         data() {
             return {
+
+                addedProblem:[
+                    {
+                        question_type:"单选题",
+                        question_content:"when",
+                        full_score: "10",
+                        questionId:"11",
+                        main:'第一题'
+                    }
+                    // {
+                    //     question_type:"多选题",
+                    //     question_content:"which",
+                    //     full_score: "15",
+                    //     questionId: "25",
+                    //     main:'第二题'
+                    // },
+                    // {
+                    //     question_type:"解答题",
+                    //     question_content:"why",
+                    //     full_score: "12",
+                    //     questionId: "32",
+                    //     main:'hello'
+                    // }
+                ],
+
+                newP:[
+
+                ],
+
+
+
+                problem:[
+                    {
+                        question_type:"单选题",
+                        question_content:"because",
+                        full_score: "100",
+                        questionId:"13",
+                        main:'第酒题'
+                    },
+                    {
+                        question_type:"多选题",
+                        question_content:"which",
+                        full_score: "15",
+                        questionId: "25",
+                        main:'第二题'
+                    },
+                    {
+                        question_type:"多选题",
+                        question_content:"and",
+                        full_score: "16",
+                        questionId: "32",
+                        main:'hello'
+                    }
+                ],
+
+
+                courseOptions: [{
+                    label: '数学'
+                }, {
+                    label: '语文'
+                }, {
+                    label: '英语'
+                }, {
+                    label: '生物'
+                }, {
+                    label: '化学'
+                }],
+
+
+                classOptions:[
+                    {
+                        label: '21土木1班'
+                    }, {
+                        label: '20计科3班'
+                    }, {
+                        label: '20软工2班'
+                    }, {
+                        label: '21电子信息5班'
+                    }, {
+                        label: '19信安8班'
+                    }
+
+
+
+                ],
+
+                taskForm:{
+                    taskName:"",
+                    courseName:"",
+                    className:""
+                },
+
+                value: '',
+
+
                 // 每页显示的条数
                 pageSize: 10,
                 // 总记录数
@@ -256,6 +522,7 @@
                 currentPage: 1,
                 // 添加数据对话框是否展示的标记
                 dialogVisible: false,
+                bankVisible:false,
 
                 fuzzyName:"",
 
