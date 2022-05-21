@@ -16,17 +16,17 @@ public class TaskDetailDaoImpl implements TaskDetailDao {
     StringBuffer sql;
     @Override
     public List<TaskDetail> findAllTasks() {
-        sql=new StringBuffer("select * from class as a,course as b,tasks as c where a.course_id=b.id and b.id=c.course_id");
+        sql=new StringBuffer("select * from class as a,class_course as b,course as c,tasks as d where a.classId=b.class_id and b.course_id=c.id and c.id=d.course_id");
         return utils.query(sql.toString(),null,TaskDetail.class);
     }
 
     @Override
     public List<TaskDetail> findFuzzy(String semester, String fuzzy) {
-        sql=new StringBuffer("select * from class as a,course as b,tasks as c where a.course_id=b.id and b.id=c.course_id ");
+        sql=new StringBuffer("select * from class as a,class_course as b,course as c,tasks as d where a.classId=b.class_id and b.course_id=c.id and c.id=d.course_id ");
         List<Object> objectList=new ArrayList<>();
         if (!"".equals(semester)) {
             int asemester=Integer.parseInt(semester);
-            sql.append(" and c.semester=? ");
+            sql.append(" and d.semester=? ");
             objectList.add(asemester);
         }
         if (fuzzy!=null) {
@@ -35,7 +35,7 @@ public class TaskDetailDaoImpl implements TaskDetailDao {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            sql.append(" and (c.subjectname like ? or b.course_name like ? or a.class_name like ?)");
+            sql.append(" and (d.subjectname like ? or c.course_name like ? or a.classname like ?)");
             objectList.add("%"+fuzzy+"%");
             objectList.add("%"+fuzzy+"%");
             objectList.add("%"+fuzzy+"%");

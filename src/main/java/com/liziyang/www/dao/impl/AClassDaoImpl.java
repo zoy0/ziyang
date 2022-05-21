@@ -29,8 +29,15 @@ public class AClassDaoImpl implements AClassDao {
     }
 
     @Override
-    public List<AClass> findAllClass() {
-        sql=new StringBuffer("select class_name ,count(*) as course_id from student group by class_name");
-        return jdbc.query(sql.toString(),null,AClass.class);
+    public List<AClass> findClassById(int id) {
+        if (id<=0) {
+            sql=new StringBuffer("select *  from class ");
+            return jdbc.query(sql.toString(),null,AClass.class);
+        }else {
+            sql=new StringBuffer("select *  from class where classid=?");
+            Object[] objects={id};
+            return jdbc.query(sql.toString(),objects,AClass.class);
+        }
+
     }
 }

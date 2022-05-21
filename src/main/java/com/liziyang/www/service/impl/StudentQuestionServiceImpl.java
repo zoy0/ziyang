@@ -33,34 +33,34 @@ public class StudentQuestionServiceImpl implements StudentQuestionService {
 
     @Override
     public void submitAnswer(HttpServletRequest req, HttpServletResponse resp) {
-        Map<String, String[]> map = req.getParameterMap();
-        Set<String> set = map.keySet();
-        ObjectMapper mapper=new ObjectMapper();
-        int cnt=0;
-        for (String s:
-             set) {
-            if ("".equals(map.get(s)[0])) continue;
-            StudentQuestion studentQuestion=new StudentQuestion();
-            try {
-                studentQuestion.setStudentAnswer(mapper.writeValueAsString(map.get(s)));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            String s1 = s.replace("question", "").trim();
-            int questionId = Integer.parseInt(s1);
-            studentQuestion.setQuestionId(questionId);
-            studentQuestion.setStudentTaskId(Integer.parseInt((String) req.getAttribute("{studentTaskId}")));
-            int i = new StudentTaskDaoImpl().updateAnswer(studentQuestion);
-            cnt+=i;
-        }
-        try {
-            if (cnt==set.size()) {
-                ServletUtils.write(resp,true);
-            }else {
-                ServletUtils.write(resp,false);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Map<String, String[]> map = req.getParameterMap();
+//        Set<String> set = map.keySet();
+//        ObjectMapper mapper=new ObjectMapper();
+//        int cnt=0;
+//        for (String s:
+//             set) {
+//            if ("".equals(map.get(s)[0])) continue;
+//            StudentQuestion studentQuestion=new StudentQuestion();
+//            try {
+//                studentQuestion.setStudentAnswer(mapper.writeValueAsString(map.get(s)));
+//            } catch (JsonProcessingException e) {
+//                e.printStackTrace();
+//            }
+//            String s1 = s.replace("question", "").trim();
+//            int questionId = Integer.parseInt(s1);
+//            studentQuestion.setQuestionId(questionId);
+//            studentQuestion.setStudentTaskId(Integer.parseInt((String) req.getAttribute("{studentTaskId}")));
+//            int i = new StudentTaskDaoImpl().updateAnswer(studentQuestion);
+//            cnt+=i;
+//        }
+//        try {
+//            if (cnt==set.size()) {
+//                ServletUtils.write(resp,true);
+//            }else {
+//                ServletUtils.write(resp,false);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

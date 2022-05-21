@@ -16,7 +16,11 @@ public class CourseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String studentId = (String) req.getAttribute("{studentId}");
         CourseServiceImpl service = new CourseServiceImpl();
-        service.showClassCourse(resp,Integer.parseInt(studentId));
+        if (!"null".equals(studentId)) {
+            service.showClassCourse(resp,Integer.parseInt(studentId));
+        }else {
+            service.showAllCourse(resp);
+        }
     }
 
 }

@@ -36,9 +36,10 @@ public class StudentTaskDaoImpl implements StudentTaskDao {
 
     @Override
     public int updateAnswer(StudentQuestion studentQuestion) {
-        sql=new StringBuffer("update "+jdbc.getTableName(StudentQuestion.class)+ " set student_answer=? where student_task_id=? and question_id=?");
-        Object[] objects={studentQuestion.getStudentAnswer(),studentQuestion.getStudentTaskId(),studentQuestion.getQuestionId()};
-        return jdbc.update(sql.toString(),objects);
+//        sql=new StringBuffer("update "+jdbc.getTableName(StudentQuestion.class)+ " set student_answer=? where student_task_id=? and question_id=?");
+//        Object[] objects={studentQuestion.getStudentAnswer(),studentQuestion.getStudentTaskId(),studentQuestion.getQuestionId()};
+//        return jdbc.update(sql.toString(),objects);
+        return 0;
     }
 
 

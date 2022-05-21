@@ -25,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
             allTasks = new TaskDetail().setListStatusStr(new TaskDetailDaoImpl().findFuzzy(semester,fuzzy));
         }
         try {
-            ServletUtils.write(resp,allTasks);
+            ServletUtils.write(resp,new TaskDetail().mergeSameTasks(allTasks));
         } catch (IOException e) {
             e.printStackTrace();
         }

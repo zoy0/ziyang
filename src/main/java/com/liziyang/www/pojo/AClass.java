@@ -5,10 +5,10 @@ import com.liziyang.www.annotation.TableName;
 
 @TableName("class")
 public class AClass {
-    @TableField("class_name")
+    @TableField("classname")
     private String className;
 
-    @TableField("class_id")
+    @TableField("classId")
     private int classId;
 
     public AClass() {

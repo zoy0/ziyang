@@ -14,7 +14,7 @@ public class AClassServiceImpl implements AClassService {
 
     @Override
     public void showAllClass(HttpServletRequest req, HttpServletResponse resp) {
-        List<AClass> list = new AClassDaoImpl().findAllClass();
+        List<AClass> list = new AClassDaoImpl().findClassById(0);
         try {
             ServletUtils.write(resp,list);
         } catch (IOException e) {

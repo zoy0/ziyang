@@ -5,14 +5,13 @@ import com.liziyang.www.annotation.TableField;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TaskDetail {
     @TableField("taskid")
     private int taskId;
 
-    @TableField("class_name")
+    @TableField("classname")
     private String className;
 
     @TableField("course_name")
@@ -44,6 +43,8 @@ public class TaskDetail {
     private int finishNumber;
 
     private String statusStr;
+
+    private String classes;
 
     public int getTaskId() {
         return taskId;
@@ -149,6 +150,14 @@ public class TaskDetail {
         return statusStr;
     }
 
+    public String getClasses() {
+        return classes;
+    }
+
+    public void setClasses(String classes) {
+        this.classes = classes;
+    }
+
     public  void setStatusStr() {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         if (this.startTime.after(now)) {
@@ -169,4 +178,23 @@ public class TaskDetail {
         }
         return list;
     }
+
+    public Collection<TaskDetail> mergeSameTasks(List<TaskDetail> allTasks){
+        Map<Integer,TaskDetail> map=new HashMap<>();
+        List<TaskDetail> list=new ArrayList<>();
+        for (TaskDetail t:
+                allTasks) {
+            int taskId = t.getTaskId();
+            if (map.get(taskId)==null){
+                t.setClasses(t.getClassName());
+                map.put(taskId,t);
+            }else {
+                String classes = map.get(taskId).getClasses() +","+t.getClassName();
+                t.setClasses(classes);
+                map.put(taskId,t);
+            }
+        }
+        return map.values();
+    }
+
 }

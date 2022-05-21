@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>教师管理</title>
     <style>
         .el-table .warning-row {
             background: oldlace;
@@ -100,9 +100,9 @@
                         <el-select v-model="addedNewTask.taskForm.courseName" filterable placeholder="请选择">
                             <el-option
                                     v-for="item in addedNewTask.courseOptions"
-                                    :key="item.label"
-                                    :label="item.label"
-                                    :value="item.label">
+                                    :key="item.courseName"
+                                    :label="item.courseName"
+                                    :value="item.courseName">
                             </el-option>
                         </el-select>
                     </template>
@@ -216,7 +216,7 @@
                     label="题数">
             </el-table-column>
             <el-table-column
-                    prop="className"
+                    prop="classes"
                     align="center"
                     label="班级">
             </el-table-column>
@@ -290,6 +290,7 @@
             //当页面加载完成后，发送异步请求，获取数据
             this.selectAll();
             this.selectClass();
+            this.selectCourse();
         },
 
         methods: {
@@ -320,19 +321,17 @@
                     console.log(resp.data)
                     this.addedNewTask.classOptions = resp.data;
                 })
-
             },
 
             selectCourse() {
 
                 axios({
                     method: "get",
-                    url: "/course",
+                    url: "/student/null/course/",
                 }).then(resp => {
                     //设置表格数据
-                    console.log(this.fuzzyName)
                     console.log(resp.data)
-                    this.tableData = resp.data;
+                    this.addedNewTask.courseOptions = resp.data;
                 })
 
             },
@@ -531,15 +530,15 @@
 
 
                     courseOptions: [{
-                        label: '数学'
+                        courseName: '数学'
                     }, {
-                        label: '语文'
+                        courseName: '语文'
                     }, {
-                        label: '英语'
+                        courseName: '英语'
                     }, {
-                        label: '生物'
+                        courseName: '生物'
                     }, {
-                        label: '化学'
+                        courseName: '化学'
                     }],
 
 
@@ -595,7 +594,7 @@
                     subjectName: '',
                     courseName: '',
                     problemNumber: '',
-                    className: "",
+                    classes: "",
                     startTimeStr: "",
                     endTimeStr: "",
                     finishNumber: "",
@@ -611,7 +610,7 @@
                     taskName: '二轮考核',
                     courseName: '离散数学',
                     problemNumber: '1',
-                    className: "测试班",
+                    classes: "测试班",
                     startTimeStr: "2022-3-05",
                     endTimeStr: "2022-4-09",
                     finishNumber: "5",
@@ -621,7 +620,7 @@
                     taskName: '第7章',
                     courseName: '离散数学',
                     problemNumber: '10',
-                    className: "20计科5班",
+                    classes: "20计科5班",
                     startTimeStr: "2022-5-09",
                     endTimeStr: "2022-6-01",
                     finishNumber: "12",
@@ -631,7 +630,7 @@
                     taskName: '测试',
                     courseName: 'c程序设计',
                     problemNumber: '25',
-                    className: "21计算机14班",
+                    classes: "21计算机14班",
                     startTimeStr: "2022-3-05",
                     endTimeStr: "2022-6-01",
                     finishNumber: "35",

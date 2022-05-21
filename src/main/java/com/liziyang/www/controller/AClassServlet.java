@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @FuzzyValues(2)
-@WebServlet("/class/{className}")
+@WebServlet("/class/{classId}")
 public class AClassServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

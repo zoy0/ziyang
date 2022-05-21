@@ -27,5 +27,5 @@ public interface AClassDao {
      */
     int update(int cid, Map<String,Object> map);
 
-    List<AClass> findAllClass();
+    List<AClass> findClassById(int id);
 }
