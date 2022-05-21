@@ -57,7 +57,7 @@
                     append-to-body>
                 <el-table
                         ref="multipleTable"
-                        :data="problem"
+                        :data="addedNewTask.problem"
                         tooltip-effect="dark"
                         style="width: 100%"
                         @selection-change="handleSelectionChange2">
@@ -91,15 +91,15 @@
 
             <el-form ref="form" :model="brand" label-width="80px">
                 <el-form-item label="作业名称:">
-                    <el-input v-model="taskForm.taskName"></el-input>
+                    <el-input v-model="addedNewTask.taskForm.taskName"></el-input>
                 </el-form-item>
 
                 <div id="course">
                     所属课程:
                     <template>
-                        <el-select v-model="taskForm.courseName" filterable placeholder="请选择">
+                        <el-select v-model="addedNewTask.taskForm.courseName" filterable placeholder="请选择">
                             <el-option
-                                    v-for="item in courseOptions"
+                                    v-for="item in addedNewTask.courseOptions"
                                     :key="item.label"
                                     :label="item.label"
                                     :value="item.label">
@@ -112,12 +112,12 @@
                 <div>
                     所属班级：
                     <template>
-                        <el-select v-model="taskForm.className" filterable placeholder="请选择班级">
+                        <el-select v-model="addedNewTask.taskForm.className" filterable placeholder="请选择班级">
                             <el-option
-                                    v-for="item in classOptions"
-                                    :key="item.label"
-                                    :label="item.label"
-                                    :value="item.label">
+                                    v-for="item in addedNewTask.classOptions"
+                                    :key="item.className"
+                                    :label="item.className"
+                                    :value="item.className">
                             </el-option>
                         </el-select>
                     </template>
@@ -134,7 +134,7 @@
                 </el-form-item>
 
                 <el-table
-                        :data="addedProblem"
+                        :data="addedNewTask.addedProblem"
                         border
                         height="200"
                         :summary-method="getSummaries"
@@ -157,7 +157,7 @@
                             prop="full_score"
                             label="分值">
                         <template slot-scope="scope">
-                            <input placeholder="请输入" v-model="addedProblem[scope.$index].full_score">
+                            <input placeholder="请输入" v-model="addedNewTask.addedProblem[scope.$index].full_score">
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -288,9 +288,8 @@
 
         mounted() {
             //当页面加载完成后，发送异步请求，获取数据
-
             this.selectAll();
-
+            this.selectClass();
         },
 
         methods: {
@@ -305,15 +304,72 @@
                     //设置表格数据
                     console.log(this.fuzzyName)
                     console.log(resp.data)
+                    this.tableData = resp.data;
+                })
+
+
+            },
+
+            selectClass() {
+
+                axios({
+                    method: "get",
+                    url: "/class",
+                }).then(resp => {
+                    //设置表格数据
+                    console.log(resp.data)
+                    this.addedNewTask.classOptions = resp.data;
+                })
+
+            },
+
+            selectCourse() {
+
+                axios({
+                    method: "get",
+                    url: "/course",
+                }).then(resp => {
+                    //设置表格数据
+                    console.log(this.fuzzyName)
+                    console.log(resp.data)
+                    this.tableData = resp.data;
+                })
+
+            },
+
+            selectQuestionBank() {
+                axios({
+                    method: "get",
+                    url: "/question",
+                }).then(resp => {
+                    //设置表格数据
+                    console.log(this.fuzzyName)
+                    console.log(resp.data)
                     this.tableData = resp.data; // {rows:[],totalCount:100}
                     //设置总记录数
                     //this.totalCount = resp.data.totalCount;
                     //console.log(this.tableData)
                 })
 
-
             },
 
+            addTask(){
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "/question",
+                    data:_this.addedNewTask.addedProblem,
+                }).then(resp => {
+                    //设置表格数据
+                    console.log(this.fuzzyName)
+                    console.log(resp.data)
+                    this.tableData = resp.data; // {rows:[],totalCount:100}
+                    //设置总记录数
+                    //this.totalCount = resp.data.totalCount;
+                    //console.log(this.tableData)
+                })
+            },
 
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
@@ -408,10 +464,10 @@
             },
             addToNewProblem(){
                 console.log(this.newP[0])
-                this.addedProblem=this.addedProblem.concat(this.newP)
+                this.addedNewTask.addedProblem=this.addedNewTask.addedProblem.concat(this.newP)
             },
             handleDelete1(index, row) {
-                this.$delete(this.addedProblem,index)
+                this.$delete(this.addedNewTask.addedProblem,index)
                 console.log(index, row);
             },
 
@@ -420,98 +476,103 @@
         data() {
             return {
 
-                addedProblem:[
-                    {
-                        question_type:"单选题",
-                        question_content:"when",
-                        full_score: "10",
-                        questionId:"11",
-                        main:'第一题'
-                    }
-                    // {
-                    //     question_type:"多选题",
-                    //     question_content:"which",
-                    //     full_score: "15",
-                    //     questionId: "25",
-                    //     main:'第二题'
-                    // },
-                    // {
-                    //     question_type:"解答题",
-                    //     question_content:"why",
-                    //     full_score: "12",
-                    //     questionId: "32",
-                    //     main:'hello'
-                    // }
-                ],
+                addedNewTask: {
+                    addedProblem:[
+                        {
+                            question_type:"单选题",
+                            question_content:"when",
+                            full_score: "10",
+                            questionId:"11",
+                            main:'第一题'
+                        }
+                        // {
+                        //     question_type:"多选题",
+                        //     question_content:"which",
+                        //     full_score: "15",
+                        //     questionId: "25",
+                        //     main:'第二题'
+                        // },
+                        // {
+                        //     question_type:"解答题",
+                        //     question_content:"why",
+                        //     full_score: "12",
+                        //     questionId: "32",
+                        //     main:'hello'
+                        // }
+                    ],
 
-                newP:[
+                    newP:[
 
-                ],
+                    ],
+
+                    problem: [
+                        {
+                            question_type: "单选题",
+                            question_content: "because",
+                            full_score: "100",
+                            questionId: "13",
+                            main: '第酒题'
+                        },
+                        {
+                            question_type: "多选题",
+                            question_content: "which",
+                            full_score: "15",
+                            questionId: "25",
+                            main: '第二题'
+                        },
+                        {
+                            question_type: "多选题",
+                            question_content: "and",
+                            full_score: "16",
+                            questionId: "32",
+                            main: 'hello'
+                        }
+                    ],
 
 
+                    courseOptions: [{
+                        label: '数学'
+                    }, {
+                        label: '语文'
+                    }, {
+                        label: '英语'
+                    }, {
+                        label: '生物'
+                    }, {
+                        label: '化学'
+                    }],
 
-                problem:[
-                    {
-                        question_type:"单选题",
-                        question_content:"because",
-                        full_score: "100",
-                        questionId:"13",
-                        main:'第酒题'
+
+                    classOptions: [
+                        {
+                            className: '21土木1班'
+                        }, {
+                            className: '20计科3班'
+                        }, {
+                            className: '20软工2班'
+                        }, {
+                            className: '21电子信息5班'
+                        }, {
+                            className: '19信安8班'
+                        }
+
+
+                    ],
+
+                    taskForm: {
+                        taskName: "",
+                        courseName: "",
+                        className: ""
                     },
-                    {
-                        question_type:"多选题",
-                        question_content:"which",
-                        full_score: "15",
-                        questionId: "25",
-                        main:'第二题'
-                    },
-                    {
-                        question_type:"多选题",
-                        question_content:"and",
-                        full_score: "16",
-                        questionId: "32",
-                        main:'hello'
-                    }
-                ],
 
-
-                courseOptions: [{
-                    label: '数学'
-                }, {
-                    label: '语文'
-                }, {
-                    label: '英语'
-                }, {
-                    label: '生物'
-                }, {
-                    label: '化学'
-                }],
-
-
-                classOptions:[
-                    {
-                        label: '21土木1班'
-                    }, {
-                        label: '20计科3班'
-                    }, {
-                        label: '20软工2班'
-                    }, {
-                        label: '21电子信息5班'
-                    }, {
-                        label: '19信安8班'
-                    }
-
-
-
-                ],
-
-                taskForm:{
-                    taskName:"",
-                    courseName:"",
-                    className:""
+                    value: '',
                 },
 
-                value: '',
+
+
+
+
+
 
 
                 // 每页显示的条数

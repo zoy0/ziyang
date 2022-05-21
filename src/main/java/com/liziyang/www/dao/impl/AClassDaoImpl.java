@@ -35,4 +35,10 @@ public class AClassDaoImpl implements AClassDao {
     public int update(int cid, Map<String, Object> map) {
         return 0;
     }
+
+    @Override
+    public List<AClass> findAllClass() {
+        sql=new StringBuffer("select class_name ,count(*) as course_id from student group by class_name");
+        return jdbc.query(sql.toString(),null,AClass.class);
+    }
 }

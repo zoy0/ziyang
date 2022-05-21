@@ -37,4 +37,5 @@ public interface AClassDao {
      */
     int update(int cid, Map<String,Object> map);
 
+    List<AClass> findAllClass();
 }
