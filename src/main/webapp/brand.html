@@ -51,7 +51,7 @@
                 :visible.sync="dialogVisible"
         >
             <el-dialog
-                    width="30%"
+                    width="45%"
                     title="题库"
                     :visible.sync="bankVisible"
                     append-to-body>
@@ -68,13 +68,13 @@
                     <el-table-column
                             type="index"
                             label="序号"
-                            width="120">
+                            width="60">
                         <!--                    <template slot-scope="scope">{{ scope.row.date }}</template>-->
                     </el-table-column>
                     <el-table-column
-                            prop="main"
+                            prop="questionContent"
                             label="题目"
-                            width="120">
+                            width="300">
                     </el-table-column>
                 </el-table>
 
@@ -291,6 +291,7 @@
             this.selectAll();
             this.selectClass();
             this.selectCourse();
+            this.selectQuestionBank();
         },
 
         methods: {
@@ -339,17 +340,15 @@
             selectQuestionBank() {
                 axios({
                     method: "get",
-                    url: "/question",
+                    url: "/questionBank",
                 }).then(resp => {
                     //设置表格数据
-                    console.log(this.fuzzyName)
-                    console.log(resp.data)
-                    this.tableData = resp.data; // {rows:[],totalCount:100}
+                    console.log("题库",resp.data)
+                    this.addedNewTask.problem = resp.data; // {rows:[],totalCount:100}
                     //设置总记录数
                     //this.totalCount = resp.data.totalCount;
                     //console.log(this.tableData)
                 })
-
             },
 
             addTask(){
