@@ -33,7 +33,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void showClassCourse(HttpServletResponse resp, int studentId) {
         Student student = new StudentDaoImpl().select(studentId).get(0);
-        List<Course> courseList = new CourseDaoImpl().searchByClassName(student.getClassName());
+        List<Course> courseList = new CourseDaoImpl().searchByClassId(student.getClassId());
         try {
             ServletUtils.write(resp,courseList);
         } catch (IOException e) {

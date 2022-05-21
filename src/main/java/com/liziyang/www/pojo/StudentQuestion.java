@@ -6,8 +6,11 @@ import com.liziyang.www.annotation.TableName;
 @TableName("student_question")
 public class StudentQuestion {
 
-    @TableField("student_task_id")
-    private int studentTaskId;
+    @TableField("studentid")
+    private int studentId;
+
+    @TableField("taskid")
+    private int taskId;
 
     @TableField("question_id")
     private int questionId;
@@ -23,19 +26,21 @@ public class StudentQuestion {
     public StudentQuestion() {
     }
 
-    public StudentQuestion(int studentTaskId, int questionId, String studentAnswer, int score) {
-        this.studentTaskId = studentTaskId;
-        this.questionId = questionId;
-        this.studentAnswer = studentAnswer;
-        this.score = score;
+
+    public int getStudentId() {
+        return studentId;
     }
 
-    public int getStudentTaskId() {
-        return studentTaskId;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
-    public void setStudentTaskId(int studentTaskId) {
-        this.studentTaskId = studentTaskId;
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 
     public int getQuestionId() {
@@ -62,13 +67,5 @@ public class StudentQuestion {
         this.score = score;
     }
 
-    @Override
-    public String toString() {
-        return "StudentQuestion{" +
-                "studentTaskId=" + studentTaskId +
-                ", questionId=" + questionId +
-                ", studentAnswer='" + studentAnswer + '\'' +
-                ", score=" + score +
-                '}';
-    }
+
 }

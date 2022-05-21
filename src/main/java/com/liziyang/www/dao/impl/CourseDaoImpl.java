@@ -36,11 +36,10 @@ public class CourseDaoImpl implements CourseDao {
         return 0;
     }
 
+
+
     @Override
-    public List<Course> searchByClassName(String className) {
-        sql=new StringBuffer("select * from "+jdbc.getTableName(AClass.class)+","+jdbc.getTableName(Course.class)
-                +" where class_name = ? and course_id = id");
-        Object[] obj={className};
-        return jdbc.query(sql.toString(),obj,Course.class);
+    public List<Course> searchByClassId(int classId) {
+        return null;
     }
 }

@@ -21,8 +21,7 @@ public class Course {
     @TableField("count_question")
     private int countQuestion;
 
-    @TableField("class_name")
-    private String className;
+
 
     public Course() {
     }

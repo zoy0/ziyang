@@ -8,12 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface AClassDao {
-    /**
-     * 插入数据
-     * @param aClass
-     * @return
-     */
-    int insert(AClass aClass);
+
 
     /**
      * 删除数据
@@ -22,12 +17,7 @@ public interface AClassDao {
      */
     int delete(int cid);
 
-    /**
-     * 查找数据
-     * @param cid
-     * @return
-     */
-    List<AClass> select(Map<String, Object> map);
+
 
     /**
      * 修改数据

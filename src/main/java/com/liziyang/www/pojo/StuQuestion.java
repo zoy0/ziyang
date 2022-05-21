@@ -15,6 +15,9 @@ public class StuQuestion {
     @TableField("question_content")
     private String questionContent;
 
+    @TableField("question_option")
+    private String questionOption;
+
     @TableField("full_score")
     private int fullScore;
 
@@ -111,4 +114,11 @@ public class StuQuestion {
         this.score = score;
     }
 
+    public String getQuestionOption() {
+        return questionOption;
+    }
+
+    public void setQuestionOption(String questionOption) {
+        this.questionOption = questionOption;
+    }
 }

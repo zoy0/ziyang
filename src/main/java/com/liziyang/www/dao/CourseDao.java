@@ -36,5 +36,7 @@ public interface CourseDao {
      */
     int update(int cid, Map<String,Object> map);
 
-    List <Course> searchByClassName(String className);
+
+
+    List<Course> searchByClassId(int classId);
 }

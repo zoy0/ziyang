@@ -1,26 +1,16 @@
 package com.liziyang.www.pojo;
 
+
 import com.liziyang.www.annotation.TableField;
 import com.liziyang.www.annotation.TableName;
 
-@TableName("class")
-public class AClass {
-    @TableField("class_name")
-    private String className;
-
+@TableName("class_course")
+public class ClassCourse {
     @TableField("class_id")
     private int classId;
 
-    public AClass() {
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
+    @TableField("course_id")
+    private int courseId;
 
     public int getClassId() {
         return classId;
@@ -28,5 +18,13 @@ public class AClass {
 
     public void setClassId(int classId) {
         this.classId = classId;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 }
