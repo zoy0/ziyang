@@ -16,7 +16,7 @@ public class TaskDetailDaoImpl implements TaskDetailDao {
     StringBuffer sql;
     @Override
     public List<TaskDetail> findAllTasks() {
-        sql=new StringBuffer("select * from class as a,class_course as b,course as c,tasks as d where a.classId=b.class_id and b.course_id=c.id and c.id=d.course_id");
+        sql=new StringBuffer("select * from class as a,class_course as b,course as c,tasks as d where a.classId=b.class_id and b.course_id=c.id and c.id=d.course_id ");
         return utils.query(sql.toString(),null,TaskDetail.class);
     }
 

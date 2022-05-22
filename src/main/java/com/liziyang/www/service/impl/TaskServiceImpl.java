@@ -49,17 +49,19 @@ public class TaskServiceImpl implements TaskService {
         JsonParser parse = new JsonParser();
         ObjectMapper mapper = new ObjectMapper();
         int classId = 0;
-        ArrayList<Question> questions = null;
+        JsonArray questions = null;
         Tasks task = null;
         try {
             JsonObject result = (JsonObject) parse.parse(params);
             classId = result.get("classId").getAsInt();
-            questions = mapper.readValue(result.get("questions").getAsJsonArray().toString(), ArrayList.class);
+            questions = result.get("questions").getAsJsonArray();
             task = mapper.readValue(result.get("task").getAsJsonObject().toString(), Tasks.class);
         } catch (JsonSyntaxException | JsonProcessingException e) {
             e.printStackTrace();
         }
-        new QuestionDaoImpl().insertAll(questions);
         new TasksDaoImpl().insert(task);
+        int taskId = new TasksDaoImpl().searchLastTaskId();
+        new QuestionDaoImpl().insertAll(questions,taskId);
+        ServletUtils.write(resp,true);
     }
 }

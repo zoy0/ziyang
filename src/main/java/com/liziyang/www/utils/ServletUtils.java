@@ -17,8 +17,8 @@ public class ServletUtils {
         resp.setContentType("application/json;charset=utf-8");
         PrintWriter out= resp.getWriter();
         out.write(s);
-        out.flush();
         out.close();
+        out.flush();
     }
 
     public static String getParameter(String uri,int i) {

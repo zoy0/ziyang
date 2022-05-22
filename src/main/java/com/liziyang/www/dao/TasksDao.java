@@ -41,4 +41,5 @@ public interface TasksDao {
      */
     int update(int tid, Map<Field,Object> map);
 
+    int searchLastTaskId();
 }

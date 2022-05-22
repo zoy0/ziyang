@@ -10,7 +10,7 @@ public class QuestionBank {
     private int questionId;
 
     @TableField("question_type")
-    private int questionType;
+    private Question.questionType questionType;
 
     @TableField("question_content")
     private String questionContent;
@@ -25,11 +25,11 @@ public class QuestionBank {
         this.questionId = questionId;
     }
 
-    public int getQuestionType() {
+    public Question.questionType getQuestionType() {
         return questionType;
     }
 
-    public void setQuestionType(int questionType) {
+    public void setQuestionType(Question.questionType questionType) {
         this.questionType = questionType;
     }
 

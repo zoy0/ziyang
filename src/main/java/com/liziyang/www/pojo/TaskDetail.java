@@ -159,6 +159,9 @@ public class TaskDetail {
     }
 
     public  void setStatusStr() {
+        if(this.startTime==null||this.endTime==null) {
+            return;
+        }
         Timestamp now = new Timestamp(System.currentTimeMillis());
         if (this.startTime.after(now)) {
             this.statusStr="未开始";

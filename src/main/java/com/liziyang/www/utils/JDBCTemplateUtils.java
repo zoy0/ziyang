@@ -65,7 +65,12 @@ public class JDBCTemplateUtils<T> {
             for (Field f :
                     fields) {
                 if (f.isAnnotationPresent(TableField.class)) {
-                    TableField tableField = f.getAnnotation(TableField.class);
+                    TableField tableField = null;
+                    try {
+                        tableField = f.getAnnotation(TableField.class);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     String value = tableField.value();
                     char[] chars = f.getName().toCharArray();
                     if (chars[0] >= 'a' && chars[0] <= 'z') {
@@ -85,6 +90,9 @@ public class JDBCTemplateUtils<T> {
                         try {
                             Method method = c.getMethod("set" + name, f.getType());
                             Object o=rs.getObject(value);
+                            if (o==null) {
+                                continue;
+                            }
                             try {
                                 method.invoke(t, o);
                             } catch (IllegalAccessException e) {
