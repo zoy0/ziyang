@@ -31,7 +31,7 @@
         </el-form-item>
 
         <el-form-item label="">
-            <el-input v-model="fuzzyName"  placeholder="请输入作业名称/课程名称/班级名称"></el-input>
+            <el-input v-model="fuzzyName" placeholder="请输入作业名称/课程名称/班级名称"></el-input>
         </el-form-item>
 
 
@@ -88,7 +88,6 @@
             </el-dialog>
 
 
-
             <el-form ref="form" :model="brand" label-width="80px">
                 <el-form-item label="作业名称:">
                     <el-input v-model="addedNewTask.taskForm.taskName"></el-input>
@@ -97,12 +96,12 @@
                 <div id="course">
                     所属课程:
                     <template>
-                        <el-select v-model="addedNewTask.taskForm.courseName" filterable placeholder="请选择">
+                        <el-select v-model="addedNewTask.taskForm.courseId" filterable placeholder="请选择">
                             <el-option
                                     v-for="item in addedNewTask.courseOptions"
                                     :key="item.courseName"
                                     :label="item.courseName"
-                                    :value="item.courseName">
+                                    :value="item.id">
                             </el-option>
                         </el-select>
                     </template>
@@ -112,12 +111,12 @@
                 <div>
                     所属班级：
                     <template>
-                        <el-select v-model="addedNewTask.taskForm.className" filterable placeholder="请选择班级">
+                        <el-select v-model="addedNewTask.taskForm.classId" filterable placeholder="请选择班级">
                             <el-option
                                     v-for="item in addedNewTask.classOptions"
                                     :key="item.className"
                                     :label="item.className"
-                                    :value="item.className">
+                                    :value="item.classId">
                             </el-option>
                         </el-select>
                     </template>
@@ -128,7 +127,7 @@
                 <el-row>
                     题目：
                     <el-button type="success" plain>添加题目</el-button>
-                    <el-button type="danger"  plain @click="bankVisible = true">题库选题</el-button>
+                    <el-button type="danger" plain @click="bankVisible = true">题库选题</el-button>
                 </el-row>
                 <br>
                 </el-form-item>
@@ -146,18 +145,18 @@
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="question_content"
+                            prop="questionContent"
                             label="题目简介">
                     </el-table-column>
                     <el-table-column
-                            prop="question_type"
+                            prop="questionType"
                             label="题型">
                     </el-table-column>
                     <el-table-column
-                            prop="full_score"
+                            prop="fullScore"
                             label="分值">
                         <template slot-scope="scope">
-                            <input placeholder="请输入" v-model="addedNewTask.addedProblem[scope.$index].full_score">
+                            <input placeholder="请输入" v-model="addedNewTask.addedProblem[scope.$index].fullScore">
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -166,13 +165,14 @@
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete1(scope.$index, scope.row)">删除</el-button>
+                                    @click="handleDelete1(scope.$index, scope.row)">删除
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
 
                 <el-form-item>
-                    <el-button type="primary" @click="addBrand">提交</el-button>
+                    <el-button type="primary" @click="addTask">提交</el-button>
                     <el-button @click="dialogVisible = false">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -301,7 +301,7 @@
 
                 axios({
                     method: "get",
-                    url: "/task/semester/"+this.semester+"/fuzzy/"+this.fuzzyName,
+                    url: "/task/semester/" + this.semester + "/fuzzy/" + this.fuzzyName,
                 }).then(resp => {
                     //设置表格数据
                     console.log(this.fuzzyName)
@@ -343,7 +343,7 @@
                     url: "/questionBank",
                 }).then(resp => {
                     //设置表格数据
-                    console.log("题库",resp.data)
+                    console.log("题库", resp.data)
                     this.addedNewTask.problem = resp.data; // {rows:[],totalCount:100}
                     //设置总记录数
                     //this.totalCount = resp.data.totalCount;
@@ -351,13 +351,27 @@
                 })
             },
 
-            addTask(){
+            addTask() {
                 var _this = this;
 
                 axios({
                     method: "post",
-                    url: "/question",
-                    data:_this.addedNewTask.addedProblem,
+                    url: "/task/semester/null/fuzzy/null",
+                    data: {
+                        task: {
+                            taskId: "",
+                            subjectName: _this.addedNewTask.taskForm.taskName,
+                            courseId: _this.addedNewTask.taskForm.courseId,
+                            totalScore: _this.addedNewTask.totalScore,
+                            semester: "1",
+                            startTime: "",
+                            endTime: "",
+                            problemNumber: _this.addedNewTask.addedProblem.length,
+                            finishNumber: "0",
+                        },
+                        classId: _this.addedNewTask.taskForm.classId,
+                        questions: _this.addedNewTask.addedProblem,
+                    },
                 }).then(resp => {
                     //设置表格数据
                     console.log(this.fuzzyName)
@@ -433,39 +447,52 @@
                 this.selectAll();
             },
             getSummaries(param) {
-                const { columns, data } = param;
-                const sums = [];
-                columns.forEach((column, index) => {
-                    if (index === 2) {
-                        sums[index] = '总分';
-                        return;
-                    }
-                    const values = data.map(item => Number(item[column.property]));
-                    if (!values.every(value => isNaN(value))) {
-                        sums[index] = values.reduce((prev, curr) => {
-                            const value = Number(curr);
-                            if (!isNaN(value)) {
-                                return prev + curr;
-                            } else {
-                                return prev;
-                            }
-                        }, 0);
-                        sums[index] += ' 分';
-                    }
-                });
-
-                return sums;
+                // const { columns, data } = param;
+                // const sums = [];
+                // columns.forEach((column, index) => {
+                //     if (index === 2) {
+                //         sums[index] = '总分';
+                //         return;
+                //     }
+                //     const values = data.map(item => Number(item[column.property]));
+                //     if (!values.every(value => isNaN(value))) {
+                //         sums[index] = values.reduce((prev, curr) => {
+                //             const value = Number(curr);
+                //             if (!isNaN(value)) {
+                //                 return prev + curr;
+                //             } else {
+                //                 return prev;
+                //             }
+                //         }, 0);
+                //         sums[index] += ' 分';
+                //     }
+                // });
+                //
+                // return sums;
+                let sum = 0;
+                let sums = param.data;
+                for (let i = 0; i < sums.length; i++) {
+                    sum+=Number(sums[i].fullScore);
+                }
+                this.addedNewTask.totalScore = sum;
+                return [null,null,"总分:",sum];
             },
-            handleSelectionChange2(val){
-                console.log('selectArr',val)
-                this.newP=val;
+            handleSelectionChange2(val) {
+                console.log('selectArr', val)
+                this.newP = val;
             },
-            addToNewProblem(){
-                console.log(this.newP[0])
-                this.addedNewTask.addedProblem=this.addedNewTask.addedProblem.concat(this.newP)
+            addToNewProblem() {
+                for (let i = 0; i < this.newP.length; i++) {
+                    this.$set(this.newP[i], 'fullScore', 0)
+                     this.newP[i].taskId="";
+                    // this.newP[i].fullScore="0";
+                     this.newP[i].rightAnswer="";
+                }
+                this.addedNewTask.addedProblem = this.addedNewTask.addedProblem.concat(this.newP)
+                this.bankVisible = false
             },
             handleDelete1(index, row) {
-                this.$delete(this.addedNewTask.addedProblem,index)
+                this.$delete(this.addedNewTask.addedProblem, index)
                 console.log(index, row);
             },
 
@@ -475,14 +502,17 @@
             return {
 
                 addedNewTask: {
-                    addedProblem:[
-                        {
-                            question_type:"单选题",
-                            question_content:"when",
-                            full_score: "10",
-                            questionId:"11",
-                            main:'第一题'
-                        }
+                    totalScore: "",
+                    addedProblem: [
+                        // {
+                        //     questionId: "1",
+                        //     taskId: "",
+                        //     questionType: "单选题",
+                        //     questionContent: "when",
+                        //     questionOption: "",
+                        //     fullScore: "10",
+                        //     rightAnswer: '第一题'
+                        // }
                         // {
                         //     question_type:"多选题",
                         //     question_content:"which",
@@ -499,44 +529,32 @@
                         // }
                     ],
 
-                    newP:[
+                    newP: [],
 
-                    ],
+                    problem: [{
+                        questionId: "2",
+                        questionType: "多选题",
+                        questionContent: "which",
+                        questionOption: "",
+                    }
 
-                    problem: [
-                        {
-                            question_type: "单选题",
-                            question_content: "because",
-                            full_score: "100",
-                            questionId: "13",
-                            main: '第酒题'
-                        },
-                        {
-                            question_type: "多选题",
-                            question_content: "which",
-                            full_score: "15",
-                            questionId: "25",
-                            main: '第二题'
-                        },
-                        {
-                            question_type: "多选题",
-                            question_content: "and",
-                            full_score: "16",
-                            questionId: "32",
-                            main: 'hello'
-                        }
                     ],
 
 
                     courseOptions: [{
+                        id: 1,
                         courseName: '数学'
                     }, {
+                        id: 2,
                         courseName: '语文'
                     }, {
+                        id: 3,
                         courseName: '英语'
                     }, {
+                        id: 4,
                         courseName: '生物'
                     }, {
+                        id: 5,
                         courseName: '化学'
                     }],
 
@@ -559,18 +577,12 @@
 
                     taskForm: {
                         taskName: "",
-                        courseName: "",
-                        className: ""
+                        courseId: "",
+                        classId: ""
                     },
 
                     value: '',
                 },
-
-
-
-
-
-
 
 
                 // 每页显示的条数
@@ -581,15 +593,15 @@
                 currentPage: 1,
                 // 添加数据对话框是否展示的标记
                 dialogVisible: false,
-                bankVisible:false,
+                bankVisible: false,
 
-                fuzzyName:"",
+                fuzzyName: "",
 
-                semester:"",
+                semester: "",
 
 
                 brand: {
-                    semester:"",
+                    semester: "",
                     subjectName: '',
                     courseName: '',
                     problemNumber: '',
@@ -605,7 +617,7 @@
                 multipleSelection: [],
                 // 表格数据
                 tableData: [{
-                    semester:"",
+                    semester: "",
                     taskName: '二轮考核',
                     courseName: '离散数学',
                     problemNumber: '1',
@@ -615,7 +627,7 @@
                     finishNumber: "5",
                     statusStr: "已结束"
                 }, {
-                    semester:"",
+                    semester: "",
                     taskName: '第7章',
                     courseName: '离散数学',
                     problemNumber: '10',
@@ -625,7 +637,7 @@
                     finishNumber: "12",
                     statusStr: "进行中"
                 }, {
-                    semester:"",
+                    semester: "",
                     taskName: '测试',
                     courseName: 'c程序设计',
                     problemNumber: '25',

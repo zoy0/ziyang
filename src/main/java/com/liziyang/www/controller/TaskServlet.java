@@ -18,4 +18,10 @@ public class TaskServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         new TaskServiceImpl().showTask(req,resp);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        new TaskServiceImpl().addTask(req,resp);
+
+    }
 }
