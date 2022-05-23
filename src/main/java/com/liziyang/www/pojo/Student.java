@@ -5,13 +5,13 @@ import com.liziyang.www.annotation.TableName;
 
 @TableName("student")
 public class Student {
-    @TableField("id")
+    @TableField("studentid")
     private int id;
 
-    @TableField("name")
+    @TableField("studentname")
     private String name;
 
-    @TableField("class_id")
+    @TableField("classid")
     private int classId;
 
     public Student() {

@@ -27,9 +27,9 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> select(int sid) {
-        Map<String,Object> map=new HashMap<>();
-        map.put("id",sid);
-        return jdbc.commonSelect(map,Student.class);
+        sql="select * from student where studentid = ?";
+        Object[] objects={sid};
+        return jdbc.query(sql,objects,Student.class);
     }
 
     @Override

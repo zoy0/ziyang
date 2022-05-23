@@ -39,7 +39,14 @@ public class CourseDaoImpl implements CourseDao {
 
 
     @Override
-    public List<Course> searchByClassId(int classId) {
-        return null;
+    public List<Course> searchByCourseId(List<Integer> courseId) {
+        sql=new StringBuffer("select * from course where ");
+        for (int i = 0; i < courseId.size(); i++) {
+            if (i!=0) {
+                sql.append(" or ");
+            }
+            sql.append(" id = ? ");
+        }
+        return jdbc.query(sql.toString(),courseId.toArray(),Course.class);
     }
 }

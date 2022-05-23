@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <template>
+        <el-table
+                :data="tableData"
+                style="width: 100%">
+            <el-table-column
+                    label="课程名"
+                    prop="courseName">
+            </el-table-column>
+            <el-table-column
+                    label="作业表"
+                    prop="aprofiles">
+            </el-table-column>
+            <el-table-column
+                    label="章节"
+                    prop="countSubject">
+            </el-table-column>
+            <el-table-column
+                    label="题目数"
+                    prop="countQuestion">
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    align="right">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="comeToHomeWork(scope.$index, scope.row)">点击进入书面作业
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+
+        mounted() {
+            this.selectStudentCourse();
+        },
+
+        methods: {
+
+            selectStudentCourse(){
+                axios({
+                    method: "get",
+                    url: "/student/2/course",
+                }).then(resp => {
+                    console.log(resp.data)
+                    this.tableData = resp.data;
+                })
+
+            },
+
+            comeToHomeWork(index, row) {
+                window.location = "homework2.html?id="+this.tableData[index].id;
+            },
+
+        },
+
+        data() {
+            return {
+                tableData: [{
+                    id: "",
+                    courseName: "",
+                    aProfiles: "",
+                    countSubject: "",
+                    countQuestion: ""
+                }]
+            }
+        }
+
+    })
+
+</script>
+
+</body>
+</html>

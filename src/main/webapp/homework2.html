@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+    <template>
+        <el-table
+                :data="tableData"
+                style="width: 100%">
+            <el-table-column
+                    type="index"
+                    label="序号">
+            </el-table-column>
+            <el-table-column
+                    label="作业名称"
+                    prop="subjectName">
+            </el-table-column>
+            <el-table-column
+                    label="题数"
+                    prop="problemNumber">
+            </el-table-column>
+            <el-table-column
+                    label="总分"
+                    prop="totalScore">
+            </el-table-column>
+            <el-table-column
+                    label="截止时间"
+                    prop="endTime">
+            </el-table-column>
+            <el-table-column
+                    label="已完成题数"
+                    prop="finishNumber">
+            </el-table-column>
+
+            <el-table-column
+                    label="状态"
+                    prop="state">
+                <template slot-scope="scope">
+                    {{scope.row.state=='ISFINISH' ? '已提交' : '为'}}
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    label="操作">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            v-if="scope.row.state != 'ISFINISH'"
+                            @click="comeToHomeWork(scope.$index, scope.row)">做题
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            v-else
+                            @click="comeToHomeWork(scope.$index, scope.row)">查看
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+</div>
+
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script src="js/axios-0.18.0.js"></script>
+<script src="js/my.js"></script>
+
+
+
+
+<script>
+    new Vue({
+        el: "#app",
+
+        mounted() {
+            this.selectStudentTasks();
+        },
+
+        methods: {
+
+            selectStudentTasks() {
+                axios({
+                    method: "get",
+                    url: "/student/2/course/" + getQueryVariable("id") + "/studentTasks",
+                }).then(resp => {
+                    console.log(resp.data)
+                    let data = resp.data;
+                    for (let i = 0; i < data.length; i++) {
+                        data[i].endTime = timestampToTime(data[i].endTime);
+                    }
+                    this.tableData = resp.data;
+                })
+
+            },
+
+            comeToHomeWork(index, row) {
+                window.location = "homework.html?id=" + this.tableData[index].id;
+            },
+
+        },
+
+        data() {
+            return {
+                tableData: [{
+                    taskId: "",
+                    courseId: "",
+                    subjectName: "",
+                    problemNumber: "",
+                    totalScore: "",
+                    endTime: "",
+                    state: "",
+                    finishNumber: ""
+                }]
+            }
+        }
+
+    })
+
+</script>
+
+</body>
+</html>

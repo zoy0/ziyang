@@ -38,5 +38,5 @@ public interface CourseDao {
 
 
 
-    List<Course> searchByClassId(int classId);
+    List<Course> searchByCourseId(List<Integer> courseId);
 }
