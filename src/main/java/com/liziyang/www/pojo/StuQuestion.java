@@ -28,8 +28,6 @@ public class StuQuestion {
     private String rightAnswer;
 
 
-    @TableField("student_task_id")
-    private int studentTaskId;
 
     @TableField("student_answer")
     private String studentAnswer;
@@ -90,13 +88,7 @@ public class StuQuestion {
         this.rightAnswer = rightAnswer;
     }
 
-    public int getStudentTaskId() {
-        return studentTaskId;
-    }
 
-    public void setStudentTaskId(int studentTaskId) {
-        this.studentTaskId = studentTaskId;
-    }
 
     public String getStudentAnswer() {
         return studentAnswer;

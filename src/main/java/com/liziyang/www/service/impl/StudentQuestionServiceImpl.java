@@ -2,7 +2,11 @@ package com.liziyang.www.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.liziyang.www.dao.impl.StuQuestionDaoImpl;
+import com.liziyang.www.dao.impl.StudentQuestionDaoImpl;
 import com.liziyang.www.dao.impl.StudentTaskDaoImpl;
 import com.liziyang.www.pojo.StuQuestion;
 import com.liziyang.www.pojo.Student;
@@ -13,17 +17,16 @@ import com.liziyang.www.utils.ServletUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 
 public class StudentQuestionServiceImpl implements StudentQuestionService {
     @Override
     public void showQuestions(HttpServletRequest req, HttpServletResponse resp) {
-        String studentTaskId =(String) req.getAttribute("{studentTaskId}");
-        Map<String,Object> map=new HashMap<>();
-        map.put("student_task_id",studentTaskId);
-        int taskId =new StudentTaskDaoImpl().select(map).get(0).getTasksId();
-        List<StuQuestion> list = new StuQuestionDaoImpl().findStuQuestions(Integer.parseInt(studentTaskId),taskId);
+        String studentId =(String) req.getAttribute("{studentId}");
+        String taskId = (String) req.getAttribute("{taskId}");
+        List<StuQuestion> list = new StuQuestionDaoImpl().findStuQuestions(Integer.parseInt(studentId), Integer.parseInt(taskId));
         try {
             ServletUtils.write(resp,list);
         } catch (IOException e) {
@@ -32,35 +35,23 @@ public class StudentQuestionServiceImpl implements StudentQuestionService {
     }
 
     @Override
-    public void submitAnswer(HttpServletRequest req, HttpServletResponse resp) {
-//        Map<String, String[]> map = req.getParameterMap();
-//        Set<String> set = map.keySet();
-//        ObjectMapper mapper=new ObjectMapper();
-//        int cnt=0;
-//        for (String s:
-//             set) {
-//            if ("".equals(map.get(s)[0])) continue;
-//            StudentQuestion studentQuestion=new StudentQuestion();
-//            try {
-//                studentQuestion.setStudentAnswer(mapper.writeValueAsString(map.get(s)));
-//            } catch (JsonProcessingException e) {
-//                e.printStackTrace();
-//            }
-//            String s1 = s.replace("question", "").trim();
-//            int questionId = Integer.parseInt(s1);
-//            studentQuestion.setQuestionId(questionId);
-//            studentQuestion.setStudentTaskId(Integer.parseInt((String) req.getAttribute("{studentTaskId}")));
-//            int i = new StudentTaskDaoImpl().updateAnswer(studentQuestion);
-//            cnt+=i;
-//        }
-//        try {
-//            if (cnt==set.size()) {
-//                ServletUtils.write(resp,true);
-//            }else {
-//                ServletUtils.write(resp,false);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    public void submitAnswer(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String studentId = (String) req.getAttribute("{studentId}");
+        String taskId = (String) req.getAttribute("{taskId}");
+        BufferedReader br = req.getReader();
+        String params = br.readLine();
+        JsonParser parse = new JsonParser();
+        JsonArray asJsonArray = parse.parse(params).getAsJsonArray();
+        List<Object> list=new LinkedList<>();
+        for ( JsonElement jsonElement:
+                asJsonArray) {
+            int questionId = jsonElement.getAsJsonObject().get("questionId").getAsInt();
+            String answer = jsonElement.getAsJsonObject().get("studentAnswer").toString();
+            System.out.println(answer);
+            list.add(answer);
+            list.add(questionId);
+        }
+        int i = new StudentQuestionDaoImpl().updateById(list.toArray(),Integer.parseInt(taskId),Integer.parseInt(studentId),asJsonArray.size());
+        ServletUtils.write(resp,i!=0);
     }
 }

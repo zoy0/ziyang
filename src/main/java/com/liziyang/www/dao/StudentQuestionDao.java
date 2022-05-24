@@ -28,11 +28,6 @@ public interface StudentQuestionDao {
      */
     List<StudentQuestion> select(Integer qid);
 
-    /**
-     * 修改数据
-     * @param qid
-     * @param map
-     * @return
-     */
-    int update(int qid, Map<String,Object> map);
+    int updateById(Object[] objects,int taskId,int studentId ,int length);
+
 }

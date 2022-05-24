@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+    <script src="js/vue.js"></script>
+    <script src="element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+    <script src="js/axios-0.18.0.js"></script>
+    <script src="js/my.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <form id="questionsForm">
+        <ul>
+            <li v-for="(question,index) in tableData">
+                {{index+1}}.
+                {{question.questionType=='SINGLECHOICE'? '单选题':(question.questionType=='MULTIPLECHOICE'?'多选题':'解答题') }}({{question.fullScore}}分)<br>
+                {{question.questionContent}}<br>
+                <div v-if="question.questionType=='SINGLECHOICE'">
+                    <template>
+                        <el-radio-group v-model="question.studentAnswer">
+                            <el-radio v-for="(option,val) in question.questionOption" border
+                                      :key="option" :label="val">
+                                {{option}}
+                            </el-radio>
+                        </el-radio-group>
+                    </template>
+                </div>
+                <div v-else-if="question.questionType=='MULTIPLECHOICE'">
+                    <template>
+                        <el-checkbox-group v-model="question.studentAnswer">
+                            <el-checkbox v-for="(option,val) in question.questionOption" border
+                                         :key="option" :label="val">
+                                {{option}}
+                            </el-checkbox>
+                        </el-checkbox-group>
+                    </template>
+                </div>
+                <div v-else>
+                    <el-input
+                            type="textarea"
+                            autosize
+                            placeholder="请输入答案"
+                            v-model="question.studentAnswer">
+                    </el-input>
+                </div>
+
+            </li>
+        </ul>
+    </form>
+
+    <br>
+    <el-row>
+        <el-button type="primary" round @click="updateAnswer">提交答案</el-button>
+    </el-row>
+
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        mounted() {
+            this.selectStudentTask();
+        },
+
+        methods: {
+            //
+            goBack(){
+                window.history.go(-1);
+            },
+            selectStudentTask() {
+                axios({
+                    method: "get",
+                    url: "/student/2/task/"+getQueryVariable("id")+"/question",
+                }).then(resp => {
+                    for (let i = 0; i < resp.data.length; i++) {
+                        resp.data[i].questionOption = eval('(' + resp.data[i].questionOption + ')');
+                        resp.data[i].studentAnswer = eval('(' + resp.data[i].studentAnswer + ')');
+                    }
+                    this.tableData = resp.data;
+                    console.log(this.tableData)
+                })
+            },
+            updateAnswer() {
+                axios({
+                    method: "put",
+                    url: "/student/2/task/"+getQueryVariable("id")+"/question",
+                    data: this.tableData,
+                }).then(resp => {
+                    console.log(resp.data)
+                    if (resp.data==true) {
+                        this.$message({
+                            message: '提交成功',
+                            type: 'success'
+                        });
+                        setTimeout(this.goBack, 3000);
+                    }
+                    else {
+                        this.$message.error('提交失败');
+                    }
+                })
+            }
+
+        },
+
+        data() {
+            return {
+                poo1: "",
+                poo2: "",
+                tableData: [
+
+                    {
+                        questionType: "SINGLECHOICE",
+                        fullScore: "20",
+                        questionContent: "以下选项中可用作 C 语言合法用户标识符的是",
+                        questionOption: ["A) 2a", "B)void", "C)-abc", "D) _123"],
+                        studentAnswer: [],
+                    },
+
+                    {
+                        questionType: "MULTIPLECHOICE",
+                        fullScore: "30",
+                        questionContent: "下面四个选项中,均是不合法的转义符的选项是",
+                        questionOption: ["A) 打打", "B)bzd", "C)钝角", "D) oo"],
+                        studentAnswer: [],
+                    },
+
+                    {
+                        questionType: "EXPLAINQUESTION",
+                        fullScore: "15",
+                        questionContent: "自由发挥",
+                        questionOption: "",
+                        studentAnswer: [],
+                    }
+                ]
+
+
+            };
+        }
+    });
+
+</script>
+</body>
+</html>
