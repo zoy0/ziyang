@@ -84,7 +84,7 @@
                     url: "/student/2/task/"+getQueryVariable("id")+"/question",
                 }).then(resp => {
                     for (let i = 0; i < resp.data.length; i++) {
-                        resp.data[i].questionOption = eval('(' + resp.data[i].questionOption + ')');
+                        if (resp.data[i].questionType!='EXPLAINQUESTION') resp.data[i].questionOption = eval('(' + resp.data[i].questionOption + ')');
                         resp.data[i].studentAnswer = eval('(' + resp.data[i].studentAnswer + ')');
                     }
                     this.tableData = resp.data;

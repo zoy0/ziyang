@@ -80,9 +80,9 @@ public class TasksDaoImpl implements TasksDao {
     }
 
     @Override
-    public int updateDetail(int taskId, String subjectName, int courseId, int size) {
-        sql = "update tasks set subjectname = ? , course_id = ? , problemnumber =? where taskid = ? ";
-        Object[] objects={subjectName,courseId,size,taskId};
+    public int updateDetail(int taskId, String subjectName, int courseId, int size,int totalScore) {
+        sql = "update tasks set subjectname = ? , course_id = ? , problemnumber =? ,totalScore = ? where taskid = ? ";
+        Object[] objects={subjectName,courseId,size,totalScore,taskId};
         return jdbc.update(sql, objects);
     }
 

@@ -28,7 +28,7 @@ public class QuestionDaoImpl implements QuestionDao {
         for (int i=0;i<questions.size();i++) {
             Question q= null;
             try {
-                q = mapper.readValue(questions.get(0).toString(),Question.class);
+                q = mapper.readValue(questions.get(i).toString(),Question.class);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -66,7 +66,7 @@ public class QuestionDaoImpl implements QuestionDao {
                 if (i!=0) {
                     sql.append(",");
                 }
-                sql.append("( "+question.getQuestionId()+" ,"+question.getTaskId()+" , "+question.getQuestionType().ordinal()+" , ? ,? , 0 ,null ) " );
+                sql.append("( "+question.getQuestionId()+" ,"+taskId+" , "+question.getQuestionType().ordinal()+" , ? ,? , "+question.getFullScore()+" ,null ) " );
                 list.add(question.getQuestionContent());
                 list.add(question.getQuestionOption());
             } catch (JsonProcessingException e) {

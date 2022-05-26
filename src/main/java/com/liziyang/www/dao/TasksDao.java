@@ -50,5 +50,5 @@ public interface TasksDao {
 
     int updateEndTimeById(int taskId, Timestamp endTime);
 
-    int updateDetail(int taskId, String subjectName, int courseId, int size);
+    int updateDetail(int taskId, String subjectName, int courseId, int size,int totalScore);
 }

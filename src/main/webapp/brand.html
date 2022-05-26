@@ -174,12 +174,10 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <span slot="footer" class="dialog-footer">
                 <el-form-item>
                     <el-button type="primary" @click="addTask">提交</el-button>
                     <el-button @click="dialogVisible = false">取消</el-button>
                 </el-form-item>
-                </span>
             </el-form>
 
         </el-dialog>
@@ -752,12 +750,14 @@
                 let initialQuestionsIds = this.modifiedTask.initialQuestions.map(item => item.questionId);
                 let deletedQuestion = new Array();
                 let insertedQuestion = new Array();
+                let totalScore=0;
                 this.modifiedTask.initialQuestions.forEach((item, index) => {
                     if (!submittedQuestionIds.includes(item.questionId)) {
                         deletedQuestion.push(item);
                     }
                 })
                 this.modifiedTask.submittedQuestion.forEach((item, index) => {
+                    totalScore+=item.fullScore;
                     if (!initialQuestionsIds.includes(item.questionId)) {
                         insertedQuestion.push(item);
                     }
@@ -770,6 +770,7 @@
                     method: "put",
                     url: "/task/" + _this.modifiedTask.taskDetail.taskId + "/semester/null/fuzzy/null",
                     data: {
+                        totalScore:totalScore,
                         initialCourseId:_this.modifiedTask.taskDetail.courseId,
                         operation:"modify",
                         deletedQuestion:deletedQuestion,

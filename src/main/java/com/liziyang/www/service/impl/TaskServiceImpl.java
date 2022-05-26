@@ -92,6 +92,7 @@ public class TaskServiceImpl implements TaskService {
         String s = (String)req.getAttribute("{taskId}");
         int taskId=Integer.parseInt((String)req.getAttribute("{taskId}"));
         int courseId = 0;
+        int totalScore=modified.get("totalScore").getAsInt();
 
 //        获取课程的id
         if (modified.get("courseId").isJsonNull()) {
@@ -106,9 +107,9 @@ public class TaskServiceImpl implements TaskService {
         //该课程下的学生
         List<Student> students = new StudentDaoImpl().findByCourseId(courseId);
 
-        //改练习名字和题目数量
+        //改练习名字,题目数量和总分
 
-        new TasksDaoImpl().updateDetail(taskId,modified.get("subjectName").getAsString(), courseId , submittedQuestion.size());
+        new TasksDaoImpl().updateDetail(taskId,modified.get("subjectName").getAsString(), courseId , submittedQuestion.size(),totalScore);
 
 
         //插入题目（有则更新，无则插入）
