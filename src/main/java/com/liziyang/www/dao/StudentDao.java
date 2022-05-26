@@ -40,5 +40,5 @@ public interface StudentDao {
     int update(int id, Map<Field,Object> map);
 
 
-
+    List<Student> findByCourseId(int courseId);
 }

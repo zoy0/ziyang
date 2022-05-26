@@ -1,6 +1,7 @@
 package com.liziyang.www.dao.impl;
 
 import com.liziyang.www.dao.StudentQuestionDao;
+import com.liziyang.www.pojo.Question;
 import com.liziyang.www.pojo.StudentQuestion;
 import com.liziyang.www.utils.JDBCTemplateUtils;
 
@@ -33,6 +34,21 @@ public class StudentQuestionDaoImpl implements StudentQuestionDao {
             sql.append(" update student_question set student_answer =  ?  where taskId = "+taskId+" and studentid = "+studentId+" and question_id= ? ;\t");
         }
         return utils.update(sql.toString(),objects);
+    }
+
+    @Override
+    public int insertAll(int studentId, List<Question> questions) {
+        sql=new StringBuffer();
+        for (Question question:
+             questions) {
+            sql.append("insert into student_question values( "+question.getTaskId()+" ,"+studentId+" , "+question.getQuestionId()+" , null , 0) ;");
+        }
+        try {
+            return utils.update(sql.toString(),null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

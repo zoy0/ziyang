@@ -8,4 +8,6 @@ public interface  TaskService {
     void showTask(HttpServletRequest req, HttpServletResponse resp);
 
     void addTask(HttpServletRequest req, HttpServletResponse resp) throws IOException;
+
+    void publishTask(HttpServletRequest req, HttpServletResponse resp) throws IOException;
 }

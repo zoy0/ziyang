@@ -46,4 +46,11 @@ public class QuestionDaoImpl implements QuestionDao {
         }
         return utils.update(sql.toString(),list.toArray());
     }
+
+    @Override
+    public List<Question> findByTaskId(int taskId) {
+        sql=new StringBuffer("select * from question where task_id = ?");
+        Object[] objects={taskId};
+        return utils.query(sql.toString(),objects,Question.class);
+    }
 }

@@ -16,51 +16,47 @@ public class StudentTask {
     private int tasksId;
 
     @TableField("finish_number")
-    private int finishNumber;
+    private int finishNumber = 0;
 
     @TableField("state")
-    private State state=State.UNFINISH;
+    private State state = State.UNFINISH;
 
 
-
-    public enum State{
+    public enum State {
         /**
          *
          */
-        ISFINISH(0,"已完成"),
-        UNFINISH(1,"未提交");
+        ISFINISH(0, "已完成"),
+        UNFINISH(1, "未提交");
 
         private final int code;
         private final String mean;
 
-         State(int code, String mean) {
+        State(int code, String mean) {
             this.code = code;
             this.mean = mean;
         }
 
-         public int getCode() {
-             return code;
-         }
+        public int getCode() {
+            return code;
+        }
 
-         public String getMean() {
-             return mean;
-         }
+        public String getMean() {
+            return mean;
+        }
 
-         @Override
+        @Override
         public String toString() {
-            return  mean;
+            return mean;
         }
     }
 
     public StudentTask() {
     }
 
-    public StudentTask(int studentTaskId, int studentId, int tasksId, int finishNumber, State state) {
-        this.studentTaskId = studentTaskId;
+    public StudentTask(int studentId, int tasksId) {
         this.studentId = studentId;
         this.tasksId = tasksId;
-        this.finishNumber = finishNumber;
-        this.state = state;
     }
 
     public int getStudentId() {

@@ -4,6 +4,7 @@ import com.liziyang.www.pojo.Student;
 import com.liziyang.www.pojo.Tasks;
 
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -42,4 +43,6 @@ public interface TasksDao {
     int update(int tid, Map<Field,Object> map);
 
     int searchLastTaskId();
+
+    int updateEndTimeById(int taskId, Timestamp endTime);
 }

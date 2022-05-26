@@ -20,6 +20,7 @@
     <!--搜索表单-->
     <el-form :inline="true" :model="brand" class="demo-form-inline">
 
+        <!--        选择学期-->
         <el-form-item label="学期">
             <el-select v-model="semester">
                 <el-option label="2022春" value="1"></el-option>
@@ -30,6 +31,7 @@
             </el-select>
         </el-form-item>
 
+        <!--        输入搜索的模糊值-->
         <el-form-item label="">
             <el-input v-model="fuzzyName" placeholder="请输入作业名称/课程名称/班级名称"></el-input>
         </el-form-item>
@@ -45,6 +47,7 @@
         <el-button type="success" plain>导出成绩</el-button>
     </el-row>
 
+    <!--    添加作业对话框-->
     <div id="taskForm">
         <el-dialog
                 title="添加作业"
@@ -77,11 +80,12 @@
                             width="300">
                     </el-table-column>
                 </el-table>
-
+                <span slot="footer" class="dialog-footer">
                 <el-row>
                     <el-button type="primary" round @click="addToNewProblem">选择</el-button>
                     <el-button type="danger" round @click="bankVisible = false">取消</el-button>
                 </el-row>
+                </span>
                 <br>
 
 
@@ -170,11 +174,12 @@
                         </template>
                     </el-table-column>
                 </el-table>
-
+                <span slot="footer" class="dialog-footer">
                 <el-form-item>
                     <el-button type="primary" @click="addTask">提交</el-button>
                     <el-button @click="dialogVisible = false">取消</el-button>
                 </el-form-item>
+                </span>
             </el-form>
 
         </el-dialog>
@@ -203,6 +208,9 @@
                     label="作业名称"
                     align="center"
             >
+                <template scope="scope">
+                    <div class="sub-body" @click="modifyTask(scope.row)">{{ scope.row.subjectName }}</div>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="courseName"
@@ -249,13 +257,33 @@
                     align="center"
                     label="操作">
 
-                <div>
-                    <el-link type="success">查看</el-link>
-                    /
-                    <el-link type="primary">延长</el-link>
-                    /
-                    <el-link type="danger">结束</el-link>
-                </div>
+                <template slot-scope="scope">
+                    <div v-if="tableData[scope.$index].statusStr=='进行中'">
+                        <el-link type="success">查看</el-link>
+                        /
+                        <el-link type="primary">延长</el-link>
+                        /
+                        <el-link type="danger">结束</el-link>
+                    </div>
+                    <div v-else-if="tableData[scope.$index].statusStr=='已结束'">
+                        <el-link type="success">批改</el-link>
+                        /
+                        <el-link type="primary">延长</el-link>
+                        /
+                        <el-link type="primary">复用</el-link>
+                    </div>
+                    <div v-else>
+                        <el-link type="success"
+                                 @click="timeDialogVisible = true ,publishedTask.id = tableData[scope.$index].taskId ">
+                            发布
+                        </el-link>
+                        /
+                        <el-link type="primary">复用</el-link>
+                        /
+                        <el-link type="danger">删除</el-link>
+                    </div>
+                </template>
+                >
 
             </el-table-column>
 
@@ -272,6 +300,168 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalCount">
     </el-pagination>
+
+    <!--    作业发布对话框-->
+    <el-dialog
+            title="作业结束时间"
+            :visible.sync="timeDialogVisible"
+            width="30%"
+            center>
+        <el-date-picker
+                v-model="publishedTask.endTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                align="right"
+                :picker-options="pickerOptions">
+        </el-date-picker>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="timeDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="publishTask">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <!--    修改练习对话框-->
+    <div>
+        <el-dialog
+                title="修改作业"
+                :visible.sync="modifyDialogVisible"
+        >
+            <el-dialog
+                    width="45%"
+                    title="题库"
+                    :visible.sync="bankVisible2"
+                    append-to-body>
+                <el-table
+                        ref="multipleTable"
+                        :data="addedNewTask.problem"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange2">
+                    <el-table-column
+                            type="selection"
+                            width="55">
+                    </el-table-column>
+                    <el-table-column
+                            type="index"
+                            label="序号"
+                            width="60">
+                        <!--                    <template slot-scope="scope">{{ scope.row.date }}</template>-->
+                    </el-table-column>
+                    <el-table-column
+                            prop="questionContent"
+                            label="题目"
+                            width="300">
+                    </el-table-column>
+                </el-table>
+                <span slot="footer" class="dialog-footer">
+                            <el-row>
+                                <el-button type="primary" round @click="addToInsertQuestion">选择</el-button>
+                                <el-button type="danger" round @click="bankVisible2 = false">取消</el-button>
+                            </el-row>
+                            </span>
+                <br>
+
+
+            </el-dialog>
+
+
+            <el-form ref="form" :model="modifiedTask" label-width="80px">
+                <el-form-item label="作业名称:">
+                    <el-input v-model="modifiedTask.taskDetail.subjectName"></el-input>
+                </el-form-item>
+
+                <div>
+                    所属课程:
+                    <template>
+                        <el-select v-model="modifiedTask.taskDetail.courseName" filterable placeholder="请选择">
+                            <el-option
+                                    v-for="item in addedNewTask.courseOptions"
+                                    :key="item.courseName"
+                                    :label="item.courseName"
+                                    :value="item.courseName">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </div>
+                <br>
+
+                <div>
+                    所属班级：
+                    <template>
+                        <el-select v-model="modifiedTask.id" filterable placeholder="请选择班级">
+                            <el-option
+                                    v-for="item in addedNewTask.classOptions"
+                                    :key="item.className"
+                                    :label="item.className"
+                                    :value="item.classId">
+                            </el-option>
+                        </el-select>
+                    </template>
+
+                </div>
+                <br>
+
+                <el-row>
+                    题目：
+                    <el-button type="success" plain>添加题目</el-button>
+                    <el-button type="danger" plain @click="bankVisible2 = true">题库选题</el-button>
+                </el-row>
+                <br>
+                </el-form-item>
+
+                <el-table
+                        :data="modifiedTask.submittedQuestion"
+                        border
+                        height="200"
+                        :summary-method="getSummaries"
+                        show-summary
+                        style="width: 100%; margin-top: 20px">
+                    <el-table-column
+                            type="index"
+                            label="序号"
+                            width="36">
+                    </el-table-column>
+                    <el-table-column
+                            prop="questionContent"
+                            label="题目简介"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            label="题型">
+                        <template slot-scope="scope">
+                            {{scope.row.questionType=='SINGLECHOICE'?'单选题':(scope.row.questionType=='MULTIPLECHOICE'?'多选题':'解答题')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="fullScore"
+                            label="分值">
+                        <template slot-scope="scope">
+                            <input placeholder="请输入"
+                                   v-model="modifiedTask.submittedQuestion[scope.$index].fullScore">
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDelete2(scope.$index, scope.row)">删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-form-item>
+                    <el-button type="primary" @click="submitModifiedTask">提交</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
+                </el-form-item>
+
+            </el-form>
+
+
+        </el-dialog>
+    </div>
+
 
 </div>
 
@@ -296,12 +486,17 @@
 
         methods: {
 
+            // 调试的查看的函数
+            look() {
+                console.log(this.modifiedTask)
+            },
+
             // 查询分页数据
             selectAll() {
 
                 axios({
                     method: "get",
-                    url: "/task/semester/" + this.semester + "/fuzzy/" + this.fuzzyName,
+                    url: "/task/null/semester/" + this.semester + "/fuzzy/" + this.fuzzyName,
                 }).then(resp => {
                     //设置表格数据
                     console.log(this.fuzzyName)
@@ -312,6 +507,7 @@
 
             },
 
+            // 查看所有班级
             selectClass() {
 
                 axios({
@@ -324,6 +520,7 @@
                 })
             },
 
+            // 查看所有课程
             selectCourse() {
 
                 axios({
@@ -337,6 +534,7 @@
 
             },
 
+            // 查看题库
             selectQuestionBank() {
                 axios({
                     method: "get",
@@ -351,12 +549,38 @@
                 })
             },
 
+            // 发布练习
+            publishTask() {
+                var _this = this;
+                axios({
+                    method: "put",
+                    url: "/task/" + _this.publishedTask.id + "/semester/null/fuzzy/null",
+                    data: {
+                        operation:"publish",
+                        taskId: _this.publishedTask.id,
+                        endTime: _this.publishedTask.endTime.getTime()
+                    }
+                }).then(resp => {
+                    if (resp.data == true) {
+                        this.$message({
+                            message: '发布成功',
+                            type: 'success'
+                        });
+                        this.selectAll();
+                        this.timeDialogVisible = false;
+                    } else {
+                        this.$message.error('发布失败');
+                    }
+                })
+            },
+
+            // 添加练习
             addTask() {
                 var _this = this;
 
                 axios({
                     method: "post",
-                    url: "/task/semester/null/fuzzy/null",
+                    url: "/task/null/semester/null/fuzzy/null",
                     data: {
                         task: {
                             taskId: "",
@@ -373,16 +597,20 @@
                         questions: _this.addedNewTask.addedProblem,
                     },
                 }).then(resp => {
-                    //设置表格数据
-                    console.log(this.fuzzyName)
-                    console.log(resp.data)
-                    this.tableData = resp.data; // {rows:[],totalCount:100}
-                    //设置总记录数
-                    //this.totalCount = resp.data.totalCount;
-                    //console.log(this.tableData)
+                    if (resp.data == true) {
+                        this.$message({
+                            message: '添加练习成功',
+                            type: 'success'
+                        });
+                        this.selectAll();
+                        this.dialogVisible = false;
+                    } else {
+                        this.$message.error('添加练习失败');
+                    }
                 })
             },
 
+            //???
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
                     return 'warning-row';
@@ -391,6 +619,8 @@
                 }
                 return '';
             },
+
+
             // 复选框选中后执行的方法
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -403,35 +633,6 @@
                 this.selectAll();
 
             },
-            // 添加数据
-            addBrand() {
-                //console.log(this.brand);
-                var _this = this;
-
-                // 发送ajax请求，添加数据
-                axios({
-                    method: "post",
-                    url: "http://localhost:8080/brand-case/brand/add",
-                    data: _this.brand
-                }).then(function (resp) {
-                    if (resp.data == "success") {
-                        //添加成功
-
-                        //关闭窗口
-                        _this.dialogVisible = false;
-
-                        // 重新查询数据
-                        _this.selectAll();
-                        // 弹出消息提示
-                        _this.$message({
-                            message: '恭喜你，添加成功',
-                            type: 'success'
-                        });
-
-                    }
-                })
-
-            },
 
             //分页
             handleSizeChange(val) {
@@ -440,12 +641,15 @@
                 this.pageSize = val;
                 this.selectAll();
             },
+
             handleCurrentChange(val) {
                 //console.log(`当前页: ${val}`);
                 // 重新设置当前页码
                 this.currentPage = val;
                 this.selectAll();
             },
+
+            //计算总分
             getSummaries(param) {
                 // const { columns, data } = param;
                 // const sums = [];
@@ -472,34 +676,172 @@
                 let sum = 0;
                 let sums = param.data;
                 for (let i = 0; i < sums.length; i++) {
-                    sum+=Number(sums[i].fullScore);
+                    sum += Number(sums[i].fullScore);
                 }
                 this.addedNewTask.totalScore = sum;
-                return [null,null,"总分:",sum];
+                return [null, null, "总分:", sum];
             },
+
+            // 在题库选择的题目
             handleSelectionChange2(val) {
-                console.log('selectArr', val)
                 this.newP = val;
             },
+
+            // 将在题库选择的题目加入新练习中
             addToNewProblem() {
                 for (let i = 0; i < this.newP.length; i++) {
                     this.$set(this.newP[i], 'fullScore', 0)
-                     this.newP[i].taskId="";
+                    this.newP[i].taskId = "";
                     // this.newP[i].fullScore="0";
-                     this.newP[i].rightAnswer="";
+                    this.newP[i].rightAnswer = "";
                 }
                 this.addedNewTask.addedProblem = this.addedNewTask.addedProblem.concat(this.newP)
                 this.bankVisible = false
             },
+
+            // 将在题库选择的题目加入要修改的练习中
+            addToInsertQuestion() {
+                for (let i = 0; i < this.newP.length; i++) {
+                    this.$set(this.newP[i], 'fullScore', 0)
+                    this.newP[i].taskId = "";
+                    this.newP[i].rightAnswer = "";
+                }
+                this.modifiedTask.submittedQuestion = this.modifiedTask.submittedQuestion.concat(this.newP)
+                this.bankVisible2 = false
+            },
+
+            // 将某题目从将添加的新练习中删除
             handleDelete1(index, row) {
                 this.$delete(this.addedNewTask.addedProblem, index)
                 console.log(index, row);
             },
 
+            // 将某题目从将修改的练习中删除
+            handleDelete2(index, row) {
+                this.modifiedTask.submittedQuestion.splice(index, 1);
+                console.log(index, row);
+                console.log("删除后", this.modifiedTask.initialQuestions)
+            },
 
+            // 修改练习
+            modifyTask(val) {
+                console.log("详细信息", val)
+                this.modifiedTask.taskDetail = val;
+                this.modifyDialogVisible = true;
+                this.getQuestion(val.taskId);
+                console.log("修改", this.modifiedTask)
+            },
+
+            //获得某练习中的题目
+            getQuestion(taskId) {
+                axios({
+                    method: "get",
+                    url: "/task/" + taskId + "/question/",
+                }).then((resp) => {
+                    console.log(resp.data)
+                    this.modifiedTask.initialQuestions = resp.data;
+                    // this.modifiedTask.submittedQuestion = resp.data;
+                    this.modifiedTask.submittedQuestion = this.modifiedTask.submittedQuestion.concat(resp.data)
+                })
+            },
+
+            submitModifiedTask() {
+                let submittedQuestionIds = this.modifiedTask.submittedQuestion.map(item => item.questionId);
+                let initialQuestionsIds = this.modifiedTask.initialQuestions.map(item => item.questionId);
+                let deletedQuestion = new Array();
+                let insertedQuestion = new Array();
+                this.modifiedTask.initialQuestions.forEach((item, index) => {
+                    if (!submittedQuestionIds.includes(item.questionId)) {
+                        deletedQuestion.push(item);
+                    }
+                })
+                this.modifiedTask.submittedQuestion.forEach((item, index) => {
+                    if (!initialQuestionsIds.includes(item.questionId)) {
+                        insertedQuestion.push(item);
+                    }
+                })
+                console.log("被删除的题目", deletedQuestion);
+                console.log("被添加的题目", insertedQuestion);
+
+                var _this = this;
+                axios({
+                    method: "put",
+                    url: "/task/" + _this.publishedTask.id + "/semester/null/fuzzy/null",
+                    data: {
+                        operation:"modify",
+                        deletedQuestion:deletedQuestion,
+                        insertedQuestion:insertedQuestion,
+                        submittedQuestion:_this.modifiedTask.submittedQuestion
+                    }
+                }).then(resp => {
+                    if (resp.data == true) {
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                        this.selectAll();
+                        this.timeDialogVisible = false;
+                    } else {
+                        this.$message.error('修改失败');
+                    }
+                })
+            }
         },
         data() {
             return {
+                publishedTask: {
+                    id: "",
+                    endTime: ""
+                },
+
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() < (Date.now() - 8.64e7);
+                    },
+                    shortcuts: [{
+                        text: '5分钟后',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 60 * 1000 * 5);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+                        text: '10分钟后',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 60 * 1000 * 10);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+                        text: '15分钟后',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 60 * 1000 * 15);
+                            picker.$emit('pick', date);
+                        },
+                    }, {
+                        text: '30分钟后',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 60 * 1000 * 30);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+                        text: '1小时后',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 3600 * 1000);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+                        text: '一周后',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', date);
+                        }
+                    }]
+                },
 
                 addedNewTask: {
                     totalScore: "",
@@ -585,6 +927,15 @@
                 },
 
 
+                bankVisible2: false,
+                modifyDialogVisible: false,
+                modifiedTask: {
+                    taskDetail: "",
+                    initialQuestions: "",
+                    submittedQuestion: []
+                },
+
+
                 // 每页显示的条数
                 pageSize: 10,
                 // 总记录数
@@ -594,7 +945,7 @@
                 // 添加数据对话框是否展示的标记
                 dialogVisible: false,
                 bankVisible: false,
-
+                timeDialogVisible: false,
                 fuzzyName: "",
 
                 semester: "",

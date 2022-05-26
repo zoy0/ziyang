@@ -72,4 +72,11 @@ public class TasksDaoImpl implements TasksDao {
         return taskId;
     }
 
+    @Override
+    public int updateEndTimeById(int taskId, Timestamp endTime) {
+        sql="update tasks set starttime = ? , endTime = ? where taskid = ? ";
+        Object[] objects={new Timestamp(System.currentTimeMillis()),endTime,taskId};
+        return jdbc.update(sql,objects);
+    }
+
 }

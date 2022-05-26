@@ -2,17 +2,10 @@ package com.liziyang.www.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.liziyang.www.dao.QuestionDao;
-import com.liziyang.www.dao.impl.QuestionDaoImpl;
-import com.liziyang.www.dao.impl.TaskDetailDaoImpl;
-import com.liziyang.www.dao.impl.TasksDaoImpl;
-import com.liziyang.www.pojo.Question;
-import com.liziyang.www.pojo.TaskDetail;
-import com.liziyang.www.pojo.Tasks;
+import com.liziyang.www.dao.impl.*;
+import com.liziyang.www.pojo.*;
 import com.liziyang.www.service.TaskService;
 import com.liziyang.www.utils.ServletUtils;
 import com.sun.deploy.net.URLEncoder;
@@ -21,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,12 +50,41 @@ public class TaskServiceImpl implements TaskService {
             classId = result.get("classId").getAsInt();
             questions = result.get("questions").getAsJsonArray();
             task = mapper.readValue(result.get("task").getAsJsonObject().toString(), Tasks.class);
+
+            new TasksDaoImpl().insert(task);
+            int taskId = new TasksDaoImpl().searchLastTaskId();
+            new QuestionDaoImpl().insertAll(questions, taskId);
         } catch (JsonSyntaxException | JsonProcessingException e) {
+            ServletUtils.write(resp,false);
             e.printStackTrace();
         }
-        new TasksDaoImpl().insert(task);
-        int taskId = new TasksDaoImpl().searchLastTaskId();
-        new QuestionDaoImpl().insertAll(questions,taskId);
-        ServletUtils.write(resp,true);
+        ServletUtils.write(resp, true);
+    }
+
+    @Override
+    public void publishTask(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BufferedReader br = req.getReader();
+        String params = br.readLine();
+        System.out.println(params);
+        JsonParser parse = new JsonParser();
+        JsonObject task = parse.parse(params).getAsJsonObject();
+        int taskId = task.get("taskId").getAsInt();
+        Timestamp endTime = new Timestamp(task.get("endTime").getAsLong());
+        try {
+            new TasksDaoImpl().updateEndTimeById(taskId, endTime);
+            int courseId = new TasksDaoImpl().select(taskId).get(0).getCourseId();
+            List<Student> students = new StudentDaoImpl().findByCourseId(courseId);
+            List<Question> questions = new QuestionDaoImpl().findByTaskId(taskId);
+            for (Student student :
+                    students) {
+                new StudentTaskDaoImpl().insert(new StudentTask(student.getId(), taskId));
+                new StudentQuestionDaoImpl().insertAll(student.getId(), questions);
+            }
+            ServletUtils.write(resp, true);
+        } catch (Exception e) {
+            ServletUtils.write(resp, false);
+            e.printStackTrace();
+        }
+
     }
 }

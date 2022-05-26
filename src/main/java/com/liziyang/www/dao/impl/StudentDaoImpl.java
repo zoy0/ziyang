@@ -36,4 +36,11 @@ public class StudentDaoImpl implements StudentDao {
     public int update(int id, Map<Field, Object> map) {
         return 0;
     }
+
+    @Override
+    public List<Student> findByCourseId(int courseId) {
+        sql="select * from student as A , class_course as B , class as C where course_id = ? and A.classid = B.class_id and B.class_id = C.classId";
+        Object[] objects={courseId};
+        return jdbc.query(sql,objects,Student.class);
+    }
 }

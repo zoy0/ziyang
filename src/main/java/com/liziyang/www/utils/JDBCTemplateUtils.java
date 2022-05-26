@@ -23,8 +23,10 @@ public class JDBCTemplateUtils<T> {
         try {
             conn = JDBCUtils.getConnection();
             ps = conn.prepareStatement(sql);
-            for (int i = 1; i <= objs.length; i++) {
-                ps.setObject(i, objs[i - 1]);
+            if (objs!=null) {
+                for (int i = 1; i <= objs.length; i++) {
+                    ps.setObject(i, objs[i - 1]);
+                }
             }
             return ps.executeUpdate();
         } catch (SQLException throwables) {
