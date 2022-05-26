@@ -38,6 +38,7 @@ public class StudentQuestionServiceImpl implements StudentQuestionService {
     public void submitAnswer(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String studentId = (String) req.getAttribute("{studentId}");
         String taskId = (String) req.getAttribute("{taskId}");
+        int finishNumber=0;
         BufferedReader br = req.getReader();
         String params = br.readLine();
         JsonParser parse = new JsonParser();
@@ -47,11 +48,16 @@ public class StudentQuestionServiceImpl implements StudentQuestionService {
                 asJsonArray) {
             int questionId = jsonElement.getAsJsonObject().get("questionId").getAsInt();
             String answer = jsonElement.getAsJsonObject().get("studentAnswer").toString();
+            if (!"null".equals(answer)) {
+                finishNumber+=1;
+            }
             System.out.println(answer);
             list.add(answer);
             list.add(questionId);
         }
+        System.out.println(finishNumber);
         int i = new StudentQuestionDaoImpl().updateById(list.toArray(),Integer.parseInt(taskId),Integer.parseInt(studentId),asJsonArray.size());
+        new StudentTaskDaoImpl().updateFinishedTask(Integer.parseInt(studentId),Integer.parseInt(taskId),finishNumber);
         ServletUtils.write(resp,i!=0);
     }
 }

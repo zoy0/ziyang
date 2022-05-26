@@ -58,5 +58,12 @@ public class StudentTaskDaoImpl implements StudentTaskDao {
         return jdbc.update(sql.substring(0,sql.lastIndexOf(",")),null);
     }
 
+    @Override
+    public int updateFinishedTask(int studentId, int taskId, int finishNumber) {
+        sql=new StringBuffer("update student_task set finish_number = ? , state = 1 where student_id= ? and task_id = ?");
+        Object[] objects={finishNumber,studentId,taskId};
+        return jdbc.update(sql.toString(),objects);
+    }
+
 
 }

@@ -97,7 +97,7 @@
                     url: "/student/2/task/"+getQueryVariable("id")+"/question",
                     data: this.tableData,
                 }).then(resp => {
-                    console.log(resp.data)
+                    console.log("作业",resp.data)
                     if (resp.data==true) {
                         this.$message({
                             message: '提交成功',
