@@ -38,4 +38,6 @@ public interface StudentQuestionDao {
     int updateByArrays(int taskId, List<Student> students, JsonArray deletedQuestion, JsonArray insertedQuestion);
 
     int deleteByTaskId(int taskId);
+
+    int insertAllByJsonArray(int taskId, List<Student> students, JsonArray submittedQuestion);
 }

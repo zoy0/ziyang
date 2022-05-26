@@ -768,7 +768,7 @@
                 var _this = this;
                 axios({
                     method: "put",
-                    url: "/task/" + _this.publishedTask.id + "/semester/null/fuzzy/null",
+                    url: "/task/" + _this.modifiedTask.taskDetail.taskId + "/semester/null/fuzzy/null",
                     data: {
                         initialCourseId:_this.modifiedTask.taskDetail.courseId,
                         operation:"modify",

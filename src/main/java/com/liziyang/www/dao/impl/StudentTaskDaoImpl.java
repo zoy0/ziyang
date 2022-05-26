@@ -44,8 +44,18 @@ public class StudentTaskDaoImpl implements StudentTaskDao {
 
     @Override
     public int deleteByTaskId(int taskId) {
-        sql=new StringBuffer("delete from student_task where taskid = "+taskId);
+        sql=new StringBuffer("delete from student_task where task_id = "+taskId);
         return jdbc.update(sql.toString(),null);
+    }
+
+    @Override
+    public int insertAll(List<Student> students, int taskId) {
+        sql=new StringBuffer("insert into student_task values ");
+        for (Student s:
+             students) {
+            sql.append(" (null,"+s.getId()+","+taskId+",0,0) ,");
+        }
+        return jdbc.update(sql.substring(0,sql.lastIndexOf(",")),null);
     }
 
 

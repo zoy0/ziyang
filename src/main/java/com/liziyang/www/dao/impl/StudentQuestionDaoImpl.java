@@ -83,18 +83,23 @@ public class StudentQuestionDaoImpl implements StudentQuestionDao {
             }
 
             if (insertedQuestion.size() != 0) {
+                sql.append("insert into student_question values");
                 for (JsonElement iq :
                         insertedQuestion) {
                     for (Student student :
                             students) {
                         int insertedQuestionId = iq.getAsJsonObject().get("questionId").getAsInt();
                         int studentId = student.getId();
-                        sql.append("insert into studentQuestion values( " + taskId + " , " + studentId + ", " + insertedQuestionId + " , null , 0) ;");
+                        sql.append("( " + taskId + " , " + studentId + ", " + insertedQuestionId + " , null , 0) ,");
                     }
                 }
-                st = conn.prepareStatement(sql.toString());
+                String s = sql.substring(0, sql.lastIndexOf(","));
+                st = conn.prepareStatement(s);
                 st.executeUpdate();
+
+
             }
+            conn.commit();
         } catch (SQLException throwables) {
             //如果失败则回滚事务
             try {
@@ -115,6 +120,22 @@ public class StudentQuestionDaoImpl implements StudentQuestionDao {
     public int deleteByTaskId(int taskId) {
         sql=new StringBuffer("delete from student_question where taskid = "+taskId);
         return utils.update(sql.toString(),null);
+    }
+
+    @Override
+    public int insertAllByJsonArray(int taskId, List<Student> students, JsonArray submittedQuestion) {
+        sql=new StringBuffer("insert into student_question values");
+        for (JsonElement sq :
+                submittedQuestion) {
+            for (Student student :
+                    students) {
+                int insertedQuestionId = sq.getAsJsonObject().get("questionId").getAsInt();
+                int studentId = student.getId();
+                sql.append(" ( " + taskId + " , " + studentId + ", " + insertedQuestionId + " , null , 0) ,");
+            }
+        }
+        String s = sql.substring(0, sql.lastIndexOf(","));
+        return utils.update(s,null);
     }
 
 }

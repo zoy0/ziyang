@@ -89,6 +89,7 @@ public class TaskServiceImpl implements TaskService {
         JsonParser parse = new JsonParser();
         JsonObject modified = parse.parse(params).getAsJsonObject();
         System.out.println(params);
+        String s = (String)req.getAttribute("{taskId}");
         int taskId=Integer.parseInt((String)req.getAttribute("{taskId}"));
         int courseId = 0;
 
@@ -117,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
         //改练习所属课程
         if (modified.get("courseId").isJsonNull()) {
 
-            new  StudentQuestionDaoImpl().updateByArrays(taskId,students,modified.get("deletedQuestion").getAsJsonArray(),modified.get("insertedQuestion").getAsJsonArray())
+            new  StudentQuestionDaoImpl().updateByArrays(taskId,students,modified.get("deletedQuestion").getAsJsonArray(),modified.get("insertedQuestion").getAsJsonArray());
 
 
 //            //删除题目和学生端的题目
@@ -135,11 +136,10 @@ public class TaskServiceImpl implements TaskService {
 
             //如果不是，则清空学生端该练习的信息，重新在学生端插入题目（学生不同）
             new StudentTaskDaoImpl().deleteByTaskId(taskId);
+            new StudentTaskDaoImpl().insertAll(students,taskId);
             new StudentQuestionDaoImpl().deleteByTaskId(taskId);
             new StudentQuestionDaoImpl().insertAllByJsonArray(taskId,students,submittedQuestion);
 
-
-            System.out.println(4);
         }
     }
 }

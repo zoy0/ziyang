@@ -39,4 +39,6 @@ public interface StudentTaskDao {
     int updateAnswer(StudentQuestion studentQuestion);
 
     int deleteByTaskId(int taskId);
+
+    int insertAll(List<Student> students, int taskId);
 }
