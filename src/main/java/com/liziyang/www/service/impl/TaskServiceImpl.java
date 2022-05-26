@@ -55,17 +55,14 @@ public class TaskServiceImpl implements TaskService {
             int taskId = new TasksDaoImpl().searchLastTaskId();
             new QuestionDaoImpl().insertAll(questions, taskId);
         } catch (JsonSyntaxException | JsonProcessingException e) {
-            ServletUtils.write(resp,false);
+            ServletUtils.write(resp, false);
             e.printStackTrace();
         }
         ServletUtils.write(resp, true);
     }
 
     @Override
-    public void publishTask(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BufferedReader br = req.getReader();
-        String params = br.readLine();
-        System.out.println(params);
+    public void publishTask(HttpServletRequest req, HttpServletResponse resp, String params) throws IOException {
         JsonParser parse = new JsonParser();
         JsonObject task = parse.parse(params).getAsJsonObject();
         int taskId = task.get("taskId").getAsInt();
@@ -85,6 +82,25 @@ public class TaskServiceImpl implements TaskService {
             ServletUtils.write(resp, false);
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void modifyTask(HttpServletRequest req, HttpServletResponse resp, String params) throws IOException {
+        JsonParser parse = new JsonParser();
+        JsonObject modified = parse.parse(params).getAsJsonObject();
+        System.out.println(params);
+        String taskId =(String) req.getAttribute("{taskId}");
+        if (modified.get("deletedQuestion").getAsJsonArray().size()==0) {
+            System.out.println(1);
+        }
+        if (modified.get("insertedQuestion").getAsJsonArray().size()==0) {
+            System.out.println(2);
+        }
+        if (modified.get("subjectName").isJsonNull()) {
+            System.out.println(3);
+        }
+        if (modified.get("courseId").isJsonNull()) {
+            System.out.println(4);
+        }
     }
 }

@@ -28,6 +28,13 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        new TaskServiceImpl().publishTask(req,resp);
+        BufferedReader br = req.getReader();
+        String params = br.readLine();
+        String operation = new JsonParser().parse(params).getAsJsonObject().get("operation").getAsString();
+        if ("modify".equals(operation)) {
+            new TaskServiceImpl().modifyTask(req,resp,params);
+        }else if ("publish".equals(operation)){
+            new TaskServiceImpl().publishTask(req,resp,params);
+        }
     }
 }

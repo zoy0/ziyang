@@ -17,6 +17,9 @@ public class TaskDetail {
     @TableField("course_name")
     private String courseName;
 
+    @TableField("course_id")
+    private int courseId;
+
     @TableField("semester")
     private String semester;
 
@@ -156,6 +159,14 @@ public class TaskDetail {
 
     public void setClasses(String classes) {
         this.classes = classes;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public  void setStatusStr() {

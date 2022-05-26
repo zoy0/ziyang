@@ -367,18 +367,18 @@
 
             <el-form ref="form" :model="modifiedTask" label-width="80px">
                 <el-form-item label="作业名称:">
-                    <el-input v-model="modifiedTask.taskDetail.subjectName"></el-input>
+                    <el-input v-model="modifiedTask.subjectName"></el-input>
                 </el-form-item>
 
                 <div>
                     所属课程:
                     <template>
-                        <el-select v-model="modifiedTask.taskDetail.courseName" filterable placeholder="请选择">
+                        <el-select v-model="modifiedTask.courseId" filterable placeholder="请选择">
                             <el-option
                                     v-for="item in addedNewTask.courseOptions"
                                     :key="item.courseName"
                                     :label="item.courseName"
-                                    :value="item.courseName">
+                                    :value="item.id">
                             </el-option>
                         </el-select>
                     </template>
@@ -453,7 +453,7 @@
                 </el-table>
                 <el-form-item>
                     <el-button type="primary" @click="submitModifiedTask">提交</el-button>
-                    <el-button @click="dialogVisible = false">取消</el-button>
+                    <el-button @click="modifyDialogVisible = false">取消</el-button>
                 </el-form-item>
 
             </el-form>
@@ -558,7 +558,7 @@
                     data: {
                         operation:"publish",
                         taskId: _this.publishedTask.id,
-                        endTime: _this.publishedTask.endTime.getTime()
+                        endTime: _this.publishedTask.endTime.getTime(),
                     }
                 }).then(resp => {
                     if (resp.data == true) {
@@ -727,6 +727,8 @@
             modifyTask(val) {
                 console.log("详细信息", val)
                 this.modifiedTask.taskDetail = val;
+                this.modifiedTask.subjectName=val.subjectName;
+                this.modifiedTask.courseId=val.courseId;
                 this.modifyDialogVisible = true;
                 this.getQuestion(val.taskId);
                 console.log("修改", this.modifiedTask)
@@ -771,7 +773,9 @@
                         operation:"modify",
                         deletedQuestion:deletedQuestion,
                         insertedQuestion:insertedQuestion,
-                        submittedQuestion:_this.modifiedTask.submittedQuestion
+                        submittedQuestion:_this.modifiedTask.submittedQuestion,
+                        subjectName:_this.modifiedTask.taskDetail.subjectName==_this.modifiedTask.subjectName?null:_this.modifiedTask.subjectName,
+                        courseId:_this.modifiedTask.taskDetail.courseId==_this.modifiedTask.courseId?null:_this.modifiedTask.courseId,
                     }
                 }).then(resp => {
                     if (resp.data == true) {
@@ -930,6 +934,8 @@
                 bankVisible2: false,
                 modifyDialogVisible: false,
                 modifiedTask: {
+                    subjectName:null,
+                    courseId:null,
                     taskDetail: "",
                     initialQuestions: "",
                     submittedQuestion: []
