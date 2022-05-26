@@ -15,6 +15,7 @@ public interface TasksDao {
 
     /**
      * 插入数据
+     *
      * @param tasks
      * @return
      */
@@ -22,6 +23,7 @@ public interface TasksDao {
 
     /**
      * 删除数据
+     *
      * @param tid
      * @return
      */
@@ -29,6 +31,7 @@ public interface TasksDao {
 
     /**
      * 查找数据
+     *
      * @param tid
      * @return
      */
@@ -36,13 +39,16 @@ public interface TasksDao {
 
     /**
      * 修改数据
+     *
      * @param tid
      * @param map
      * @return
      */
-    int update(int tid, Map<Field,Object> map);
+    int update(int tid, Map<Field, Object> map);
 
     int searchLastTaskId();
 
     int updateEndTimeById(int taskId, Timestamp endTime);
+
+    int updateDetail(int taskId, String subjectName, int courseId, int size);
 }

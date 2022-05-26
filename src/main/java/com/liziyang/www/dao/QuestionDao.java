@@ -12,4 +12,7 @@ public interface QuestionDao {
     int insertAll(JsonArray questions, int taskId);
 
     List<Question> findByTaskId(int taskId);
+
+
+    int updateOrInsert(int taskId, JsonArray submittedQuestion);
 }

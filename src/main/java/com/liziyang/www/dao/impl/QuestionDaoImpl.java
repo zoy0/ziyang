@@ -3,6 +3,7 @@ package com.liziyang.www.dao.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.liziyang.www.dao.QuestionDao;
 import com.liziyang.www.pojo.Question;
 import com.liziyang.www.pojo.QuestionBank;
@@ -53,4 +54,28 @@ public class QuestionDaoImpl implements QuestionDao {
         Object[] objects={taskId};
         return utils.query(sql.toString(),objects,Question.class);
     }
+
+    @Override
+    public int updateOrInsert(int taskId, JsonArray submittedQuestion) {
+        sql = new StringBuffer("insert into question(question_id,task_id,question_type,question_content,question_option,full_score,right_answer) VALUES ");
+        ObjectMapper mapper = new ObjectMapper();
+        List<Object> list=new LinkedList<>();
+        for (int i = 0; i < submittedQuestion.size(); i++) {
+            try {
+                Question question = mapper.readValue(submittedQuestion.get(i).toString(),Question.class);
+                if (i!=0) {
+                    sql.append(",");
+                }
+                sql.append("( "+question.getQuestionId()+" ,"+question.getTaskId()+" , "+question.getQuestionType().ordinal()+" , ? ,? , 0 ,null ) " );
+                list.add(question.getQuestionContent());
+                list.add(question.getQuestionOption());
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        sql.append(" ON DUPLICATE KEY UPDATE full_score=VALUES(full_score);");
+        return utils.update(sql.toString(),list.toArray());
+    }
+
+
 }

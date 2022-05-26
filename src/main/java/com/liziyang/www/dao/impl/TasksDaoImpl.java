@@ -22,9 +22,9 @@ public class TasksDaoImpl implements TasksDao {
     @Override
     public int insert(Tasks tasks) {
         sql = "insert into tasks values(null,?,?,?,?,?,?,?,?)";
-        Object[] objects = {tasks.getCourseId(),tasks.getSemester(),tasks.getSubjectName(),
-                tasks.getProblemNumber(),tasks.getTotalScore(),tasks.getStartTime(),
-                tasks.getEndTime(),tasks.getFinishNumber()};
+        Object[] objects = {tasks.getCourseId(), tasks.getSemester(), tasks.getSubjectName(),
+                tasks.getProblemNumber(), tasks.getTotalScore(), tasks.getStartTime(),
+                tasks.getEndTime(), tasks.getFinishNumber()};
         return jdbc.update(sql, objects);
     }
 
@@ -74,9 +74,16 @@ public class TasksDaoImpl implements TasksDao {
 
     @Override
     public int updateEndTimeById(int taskId, Timestamp endTime) {
-        sql="update tasks set starttime = ? , endTime = ? where taskid = ? ";
-        Object[] objects={new Timestamp(System.currentTimeMillis()),endTime,taskId};
-        return jdbc.update(sql,objects);
+        sql = "update tasks set starttime = ? , endTime = ? where taskid = ? ";
+        Object[] objects = {new Timestamp(System.currentTimeMillis()), endTime, taskId};
+        return jdbc.update(sql, objects);
+    }
+
+    @Override
+    public int updateDetail(int taskId, String subjectName, int courseId, int size) {
+        sql = "update tasks set subjectname = ? , course_id = ? , problemnumber =? where taskid = ? ";
+        Object[] objects={subjectName,courseId,size,taskId};
+        return jdbc.update(sql, objects);
     }
 
 }

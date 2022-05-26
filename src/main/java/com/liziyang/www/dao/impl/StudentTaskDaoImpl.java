@@ -42,5 +42,11 @@ public class StudentTaskDaoImpl implements StudentTaskDao {
         return 0;
     }
 
+    @Override
+    public int deleteByTaskId(int taskId) {
+        sql=new StringBuffer("delete from student_task where taskid = "+taskId);
+        return jdbc.update(sql.toString(),null);
+    }
+
 
 }

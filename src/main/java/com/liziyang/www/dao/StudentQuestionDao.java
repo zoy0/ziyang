@@ -1,7 +1,9 @@
 package com.liziyang.www.dao;
 
+import com.google.gson.JsonArray;
 import com.liziyang.www.pojo.AClass;
 import com.liziyang.www.pojo.Question;
+import com.liziyang.www.pojo.Student;
 import com.liziyang.www.pojo.StudentQuestion;
 
 import java.util.List;
@@ -32,4 +34,8 @@ public interface StudentQuestionDao {
     int updateById(Object[] objects,int taskId,int studentId ,int length);
 
     int insertAll(int studentId, List<Question> questions);
+
+    int updateByArrays(int taskId, List<Student> students, JsonArray deletedQuestion, JsonArray insertedQuestion);
+
+    int deleteByTaskId(int taskId);
 }

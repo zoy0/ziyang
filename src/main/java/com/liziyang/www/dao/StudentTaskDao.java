@@ -37,4 +37,6 @@ public interface StudentTaskDao {
     int update(int id, Map<Field,Object> map);
 
     int updateAnswer(StudentQuestion studentQuestion);
+
+    int deleteByTaskId(int taskId);
 }

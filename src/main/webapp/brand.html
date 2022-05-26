@@ -770,11 +770,12 @@
                     method: "put",
                     url: "/task/" + _this.publishedTask.id + "/semester/null/fuzzy/null",
                     data: {
+                        initialCourseId:_this.modifiedTask.taskDetail.courseId,
                         operation:"modify",
                         deletedQuestion:deletedQuestion,
                         insertedQuestion:insertedQuestion,
                         submittedQuestion:_this.modifiedTask.submittedQuestion,
-                        subjectName:_this.modifiedTask.taskDetail.subjectName==_this.modifiedTask.subjectName?null:_this.modifiedTask.subjectName,
+                        subjectName:_this.modifiedTask.subjectName,
                         courseId:_this.modifiedTask.taskDetail.courseId==_this.modifiedTask.courseId?null:_this.modifiedTask.courseId,
                     }
                 }).then(resp => {

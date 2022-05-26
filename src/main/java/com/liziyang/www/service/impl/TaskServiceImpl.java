@@ -89,17 +89,56 @@ public class TaskServiceImpl implements TaskService {
         JsonParser parse = new JsonParser();
         JsonObject modified = parse.parse(params).getAsJsonObject();
         System.out.println(params);
-        String taskId =(String) req.getAttribute("{taskId}");
-        if (modified.get("deletedQuestion").getAsJsonArray().size()==0) {
-            System.out.println(1);
-        }
-        if (modified.get("insertedQuestion").getAsJsonArray().size()==0) {
-            System.out.println(2);
-        }
-        if (modified.get("subjectName").isJsonNull()) {
-            System.out.println(3);
-        }
+        int taskId=Integer.parseInt((String)req.getAttribute("{taskId}"));
+        int courseId = 0;
+
+//        获取课程的id
         if (modified.get("courseId").isJsonNull()) {
+            courseId=modified.get("initialCourseId").getAsInt();
+        } else {
+            courseId=modified.get("courseId").getAsInt();
+        }
+
+        JsonArray submittedQuestion = modified.get("submittedQuestion").getAsJsonArray();
+
+
+        //该课程下的学生
+        List<Student> students = new StudentDaoImpl().findByCourseId(courseId);
+
+        //改练习名字和题目数量
+
+        new TasksDaoImpl().updateDetail(taskId,modified.get("subjectName").getAsString(), courseId , submittedQuestion.size());
+
+
+        //插入题目（有则更新，无则插入）
+        new QuestionDaoImpl().updateOrInsert(taskId,submittedQuestion);
+
+
+        //改练习所属课程
+        if (modified.get("courseId").isJsonNull()) {
+
+            new  StudentQuestionDaoImpl().updateByArrays(taskId,students,modified.get("deletedQuestion").getAsJsonArray(),modified.get("insertedQuestion").getAsJsonArray())
+
+
+//            //删除题目和学生端的题目
+//            if (modified.get("deletedQuestion").getAsJsonArray().size() != 0) {
+//                new QuestionDaoImpl().deleteByArrays(modified.get("deletedQuestion").getAsJsonArray(), taskId);
+//                System.out.println(1);
+//            }
+//
+//            //有插入的信息则更新学生端的题目
+//            if (modified.get("insertedQuestion").getAsJsonArray().size() == 0) {
+//                System.out.println(2);
+//            }
+
+        } else {
+
+            //如果不是，则清空学生端该练习的信息，重新在学生端插入题目（学生不同）
+            new StudentTaskDaoImpl().deleteByTaskId(taskId);
+            new StudentQuestionDaoImpl().deleteByTaskId(taskId);
+            new StudentQuestionDaoImpl().insertAllByJsonArray(taskId,students,submittedQuestion);
+
+
             System.out.println(4);
         }
     }
