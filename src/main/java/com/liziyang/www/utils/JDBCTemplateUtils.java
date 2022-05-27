@@ -3,6 +3,8 @@ package com.liziyang.www.utils;
 import com.liziyang.www.annotation.TableField;
 import com.liziyang.www.annotation.TableName;
 import com.liziyang.www.pojo.AClass;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
